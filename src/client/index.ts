@@ -46,14 +46,31 @@ export type { AssemblyKitOptions } from "./options";
  * with its own HTTP transport, rate limiter, and credentials — safe for
  * multi-workspace and serverless usage.
  *
+ * Pass an optional `TClientCustomFields` (and optional `TCompanyCustomFields`)
+ * generic to type the `customFields` shape returned from
+ * `kit.clients.*` and `kit.companies.*` endpoints.
+ *
  * @example
  * ```ts
- * const kit = createAssemblyKit({ apiKey: "your-key", workspaceId: "ws-123" });
- * const workspace = await kit.workspace.retrieve();
+ * // Untyped customFields (default)
+ * const kit = createAssemblyKit({ apiKey, workspaceId });
+ *
+ * // Typed customFields — applies to both clients and companies
+ * const kit = createAssemblyKit<{ roles: string[] }>({ apiKey, workspaceId });
+ * const c = await kit.clients.retrieve("id"); // c.customFields: { roles: string[] } | null | undefined
+ *
+ * // Different shapes per resource
+ * const kit = createAssemblyKit<
+ *   { roles: string[] },
+ *   { industry: string }
+ * >({ apiKey, workspaceId });
  * ```
  */
-export function createAssemblyKit(options: AssemblyKitOptions): AssemblyKit {
-  return new AssemblyKit(options);
+export function createAssemblyKit<
+  TClientCustomFields extends Record<string, unknown> = Record<string, unknown>,
+  TCompanyCustomFields extends Record<string, unknown> = TClientCustomFields,
+>(options: AssemblyKitOptions): AssemblyKit<TClientCustomFields, TCompanyCustomFields> {
+  return new AssemblyKit<TClientCustomFields, TCompanyCustomFields>(options);
 }
 
 /**
@@ -61,14 +78,21 @@ export function createAssemblyKit(options: AssemblyKitOptions): AssemblyKit {
  *
  * Each instance has its own `ky`-based HTTP transport with independent
  * rate limiting, retry, and auth headers. No shared singletons.
+ *
+ * Generic parameters:
+ * - `TClientCustomFields` — shape of `customFields` on Client responses
+ * - `TCompanyCustomFields` — shape of `customFields` on Company responses (defaults to `TClientCustomFields`)
  */
-export class AssemblyKit {
+export class AssemblyKit<
+  TClientCustomFields extends Record<string, unknown> = Record<string, unknown>,
+  TCompanyCustomFields extends Record<string, unknown> = TClientCustomFields,
+> {
   /** The decrypted AssemblyToken instance, or undefined when no token was provided. */
   readonly token: AssemblyToken | undefined;
   readonly appConnections: AppConnectionsResource;
   readonly appInstalls: AppInstallsResource;
-  readonly clients: ClientsResource;
-  readonly companies: CompaniesResource;
+  readonly clients: ClientsResource<TClientCustomFields>;
+  readonly companies: CompaniesResource<TCompanyCustomFields>;
   readonly contractTemplates: ContractTemplatesResource;
   readonly contracts: ContractsResource;
   readonly customFieldOptions: CustomFieldOptionsResource;
@@ -130,8 +154,8 @@ export class AssemblyKit {
 
     this.appConnections = new AppConnectionsResource(ctx);
     this.appInstalls = new AppInstallsResource(ctx);
-    this.clients = new ClientsResource(ctx);
-    this.companies = new CompaniesResource(ctx);
+    this.clients = new ClientsResource<TClientCustomFields>(ctx);
+    this.companies = new CompaniesResource<TCompanyCustomFields>(ctx);
     this.contractTemplates = new ContractTemplatesResource(ctx);
     this.contracts = new ContractsResource(ctx);
     this.customFieldOptions = new CustomFieldOptionsResource(ctx);

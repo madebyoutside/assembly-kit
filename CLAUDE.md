@@ -88,6 +88,27 @@ if (page.nextToken) {
 }
 ```
 
+## Typed Custom Fields
+
+`createAssemblyKit` accepts optional generic parameters that type the
+`customFields` shape returned from `kit.clients.*` and `kit.companies.*`:
+
+```ts
+// Single shape applied to both clients and companies
+const kit = createAssemblyKit<{ roles: string[] }>({ apiKey, workspaceId });
+const client = await kit.clients.retrieve("id");
+client.customFields; // { roles: string[] } | null | undefined
+
+// Different shapes per resource
+const kit = createAssemblyKit<{ roles: string[] }, { industry: string }>({
+  apiKey,
+  workspaceId,
+});
+```
+
+The generics only narrow types — runtime parsing still uses the loose
+`Record<string, unknown>` schema, so unexpected fields won't throw.
+
 ## Token Utilities
 
 Standalone token decryption (not required for normal SDK usage):
