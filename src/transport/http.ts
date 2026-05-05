@@ -162,7 +162,7 @@ export const createTransport = (options: TransportOptions): Transport => {
         },
       ],
     },
-    prefixUrl: options.baseUrl ?? DEFAULT_BASE_URL,
+    prefix: options.baseUrl ?? DEFAULT_BASE_URL,
     retry: {
       limit: options.retryCount ?? 2,
       methods: ["get", "post", "put", "patch", "delete"],
