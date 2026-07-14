@@ -394,7 +394,7 @@ The payload is validated against `TokenPayloadSchema` before encryption. Throws 
 
 ### Logger
 
-A request-scoped Pino logger is available from `assembly-kit/logger`. Requires `pino` and `pino-pretty` as peer dependencies.
+A request-scoped Pino logger is available from `assembly-kit/logger`. Requires `pino` as a peer dependency.
 
 ```typescript
 import { createLogger, logger } from "assembly-kit/logger";
@@ -409,7 +409,7 @@ import { logger } from "assembly-kit/logger";
 logger.info("starting up");
 ```
 
-The logger uses `pino-pretty` in non-production environments and plain JSON in production (`NODE_ENV=production`). The default log level respects the `LOG_LEVEL` environment variable.
+The logger emits plain JSON in all environments (no worker-thread transport, so it works in serverless runtimes like Vercel). Pipe output through the `pino-pretty` CLI locally if you want human-readable logs. The default log level respects the `LOG_LEVEL` environment variable.
 
 ### App Bridge (React Hooks)
 

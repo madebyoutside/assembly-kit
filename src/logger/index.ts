@@ -5,12 +5,11 @@ import type { Logger, LoggerOptions } from "pino";
 
 export type { Logger, LoggerOptions } from "pino";
 
+// pino-pretty uses a worker-thread transport that breaks in serverless
+// runtimes (Vercel, Cloudflare). Emit plain JSON everywhere; pipe through
+// the pino-pretty CLI locally if you want pretty output.
 const DEFAULT_OPTIONS: LoggerOptions = {
   level: process.env.LOG_LEVEL ?? "info",
-  transport:
-    process.env.NODE_ENV === "production"
-      ? undefined
-      : { options: { colorize: true }, target: "pino-pretty" },
 };
 
 const buildLogger = (options: LoggerOptions = {}): Logger =>
