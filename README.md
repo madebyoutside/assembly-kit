@@ -5,11 +5,11 @@ TypeScript SDK for the [Assembly](https://assembly.ac) platform. ESM-only, targe
 ## Installation
 
 ```bash
-pnpm add @anitshrsth/assembly-kit
+pnpm add assembly-kit
 # or
-bun add @anitshrsth/assembly-kit
+bun add assembly-kit
 # or
-npm install @anitshrsth/assembly-kit
+npm install assembly-kit
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ npm install @anitshrsth/assembly-kit
 Create an SDK client with `createAssemblyKit()`. At least one of `token` or `workspaceId` must be provided:
 
 ```typescript
-import { createAssemblyKit } from "@anitshrsth/assembly-kit";
+import { createAssemblyKit } from "assembly-kit";
 
 // With token (e.g. marketplace apps, portal users)
 const kit = createAssemblyKit({
@@ -50,7 +50,7 @@ Each `createAssemblyKit()` call returns a fully independent client. To work with
 ```typescript
 // lib/assembly.ts
 import { cache } from "react";
-import { createAssemblyKit } from "@anitshrsth/assembly-kit";
+import { createAssemblyKit } from "assembly-kit";
 
 export const getAssemblyKit = cache((apiKey: string, workspaceId: string) =>
   createAssemblyKit({ apiKey, workspaceId }),
@@ -67,8 +67,8 @@ const same = getAssemblyKit("api-key-a", "ws-workspace-a"); // === kitA
 **Plain Node.js / Bun:** Manage your own singleton map:
 
 ```typescript
-import { createAssemblyKit } from "@anitshrsth/assembly-kit";
-import type { AssemblyKit } from "@anitshrsth/assembly-kit";
+import { createAssemblyKit } from "assembly-kit";
+import type { AssemblyKit } from "assembly-kit";
 
 const clients = new Map<string, AssemblyKit>();
 
@@ -177,7 +177,7 @@ const kit = createAssemblyKit({
 Every resource that supports listing also exposes `listAll()`, which collects all pages into a single array by following `nextToken` cursors automatically:
 
 ```typescript
-import { AssemblyKit } from "@anitshrsth/assembly-kit";
+import { AssemblyKit } from "assembly-kit";
 
 const kit = createAssemblyKit({ apiKey, token });
 
@@ -199,7 +199,7 @@ if (page1.nextToken) {
 
 ### Error classes
 
-All errors extend the base `AssemblyError` class, which carries a `statusCode` and optional `details` payload. Import from the package root or from `@anitshrsth/assembly-kit/errors`:
+All errors extend the base `AssemblyError` class, which carries a `statusCode` and optional `details` payload. Import from the package root or from `assembly-kit/errors`:
 
 ```typescript
 import {
@@ -215,17 +215,13 @@ import {
   AssemblyServerError,
   AssemblyConnectionError,
   AssemblyResponseParseError,
-} from "@anitshrsth/assembly-kit";
+} from "assembly-kit";
 ```
 
 #### Catching errors
 
 ```typescript
-import {
-  AssemblyRateLimitError,
-  AssemblyUnauthorizedError,
-  AssemblyError,
-} from "@anitshrsth/assembly-kit";
+import { AssemblyRateLimitError, AssemblyUnauthorizedError, AssemblyError } from "assembly-kit";
 
 try {
   await kit.companies.retrieve(id);
@@ -259,7 +255,7 @@ try {
 
 ### Schemas
 
-All Zod schemas are available from `@anitshrsth/assembly-kit/schemas` (also re-exported from the package root). Each resource has a base schema, a response schema (for paginated API responses), and optionally a request schema for create/update payloads.
+All Zod schemas are available from `assembly-kit/schemas` (also re-exported from the package root). Each resource has a base schema, a response schema (for paginated API responses), and optionally a request schema for create/update payloads.
 
 ```typescript
 import {
@@ -273,7 +269,7 @@ import {
   CustomFieldSchema,
   TokenPayloadSchema,
   HexColorSchema,
-} from "@anitshrsth/assembly-kit/schemas";
+} from "assembly-kit/schemas";
 
 // TypeScript types inferred from schemas
 import type {
@@ -283,7 +279,7 @@ import type {
   TaskStatus,
   Workspace,
   InternalUser,
-} from "@anitshrsth/assembly-kit/schemas";
+} from "assembly-kit/schemas";
 ```
 
 #### Response schemas
@@ -293,13 +289,9 @@ import {
   ClientsResponseSchema,
   CompaniesResponseSchema,
   TasksResponseSchema,
-} from "@anitshrsth/assembly-kit/schemas";
+} from "assembly-kit/schemas";
 
-import type {
-  ClientsResponse,
-  CompaniesResponse,
-  TasksResponse,
-} from "@anitshrsth/assembly-kit/schemas";
+import type { ClientsResponse, CompaniesResponse, TasksResponse } from "assembly-kit/schemas";
 ```
 
 #### Request schemas
@@ -310,15 +302,15 @@ import {
   ClientUpdateRequestSchema,
   CompanyCreateRequestSchema,
   TaskCreateRequestSchema,
-} from "@anitshrsth/assembly-kit/schemas";
+} from "assembly-kit/schemas";
 
-import type { ClientCreateRequest, ClientUpdateRequest } from "@anitshrsth/assembly-kit/schemas";
+import type { ClientCreateRequest, ClientUpdateRequest } from "assembly-kit/schemas";
 ```
 
 #### Validating data
 
 ```typescript
-import { ClientSchema } from "@anitshrsth/assembly-kit/schemas";
+import { ClientSchema } from "assembly-kit/schemas";
 
 const result = ClientSchema.safeParse(unknownData);
 
@@ -333,12 +325,12 @@ if (result.success) {
 
 Decrypt, validate, and inspect encrypted Assembly tokens using the `AssemblyToken` class. These utilities are standalone — they are also used internally by `AssemblyKit` when a token is provided.
 
-Import from either the package root or from `@anitshrsth/assembly-kit/token`:
+Import from either the package root or from `assembly-kit/token`:
 
 ```typescript
-import { AssemblyToken, createToken } from "@anitshrsth/assembly-kit";
+import { AssemblyToken, createToken } from "assembly-kit";
 // or
-import { AssemblyToken, createToken } from "@anitshrsth/assembly-kit/token";
+import { AssemblyToken, createToken } from "assembly-kit/token";
 ```
 
 #### `AssemblyToken`
@@ -346,7 +338,7 @@ import { AssemblyToken, createToken } from "@anitshrsth/assembly-kit/token";
 Decrypts and validates a token using your API key. The constructor exposes the payload along with convenience getters and guard methods:
 
 ```typescript
-import { AssemblyToken } from "@anitshrsth/assembly-kit";
+import { AssemblyToken } from "assembly-kit";
 
 const token = new AssemblyToken({ token: encryptedTokenHex, apiKey });
 
@@ -385,7 +377,7 @@ const token = AssemblyToken.new({ token: encryptedTokenHex, apiKey });
 Encrypt a `TokenPayload` into a hex-encoded token string (the inverse of `new AssemblyToken()`):
 
 ```typescript
-import { createToken } from "@anitshrsth/assembly-kit";
+import { createToken } from "assembly-kit";
 
 const encrypted = createToken({
   payload: {
@@ -402,10 +394,10 @@ The payload is validated against `TokenPayloadSchema` before encryption. Throws 
 
 ### Logger
 
-A request-scoped Pino logger is available from `@anitshrsth/assembly-kit/logger`. Requires `pino` and `pino-pretty` as peer dependencies.
+A request-scoped Pino logger is available from `assembly-kit/logger`. Requires `pino` and `pino-pretty` as peer dependencies.
 
 ```typescript
-import { createLogger, logger } from "@anitshrsth/assembly-kit/logger";
+import { createLogger, logger } from "assembly-kit/logger";
 
 // Request-scoped: returns the same instance within the same async context
 const log = createLogger({ level: "debug" });
@@ -413,7 +405,7 @@ log.info("hello");
 log.warn("careful");
 
 // Or use the default module-level logger
-import { logger } from "@anitshrsth/assembly-kit/logger";
+import { logger } from "assembly-kit/logger";
 logger.info("starting up");
 ```
 
@@ -429,14 +421,14 @@ Requires `react >= 18` and `@assembly-js/app-bridge` as peer dependencies:
 pnpm add react @assembly-js/app-bridge
 ```
 
-Import from `@anitshrsth/assembly-kit/bridge-ui`:
+Import from `assembly-kit/bridge-ui`:
 
 #### `usePrimaryCta`
 
 Registers a primary CTA button in the dashboard header:
 
 ```tsx
-import { usePrimaryCta } from "@anitshrsth/assembly-kit/bridge-ui";
+import { usePrimaryCta } from "assembly-kit/bridge-ui";
 import type { CtaConfig } from "@assembly-js/app-bridge";
 
 function MyApp() {
@@ -456,7 +448,7 @@ function MyApp() {
 Registers a secondary CTA button. Same API as `usePrimaryCta`:
 
 ```tsx
-import { useSecondaryCta } from "@anitshrsth/assembly-kit/bridge-ui";
+import { useSecondaryCta } from "assembly-kit/bridge-ui";
 
 function MyApp() {
   useSecondaryCta({
@@ -475,7 +467,7 @@ function MyApp() {
 Registers a dropdown actions menu in the dashboard header:
 
 ```tsx
-import { useActionsMenu } from "@anitshrsth/assembly-kit/bridge-ui";
+import { useActionsMenu } from "assembly-kit/bridge-ui";
 import type { ActionMenuItem } from "@assembly-js/app-bridge";
 
 function MyApp() {
@@ -499,15 +491,15 @@ useActionsMenu([{ label: "Archive", onClick: () => archive() }], hasItems);
 
 ## Entry Points
 
-| Import path                          | Exports                                                                                     |
-| ------------------------------------ | ------------------------------------------------------------------------------------------- |
-| `@anitshrsth/assembly-kit`           | `createAssemblyKit`, `AssemblyKit`, all errors, all schemas, `AssemblyToken`, `createToken` |
-| `@anitshrsth/assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`, `RetryOptions`                    |
-| `@anitshrsth/assembly-kit/errors`    | All error classes                                                                           |
-| `@anitshrsth/assembly-kit/schemas`   | All Zod schemas and inferred types (no client dependency)                                   |
-| `@anitshrsth/assembly-kit/token`     | `AssemblyToken`, `createToken`, `ClientTokenPayload`, `InternalUserTokenPayload`            |
-| `@anitshrsth/assembly-kit/logger`    | `createLogger`, `logger`                                                                    |
-| `@anitshrsth/assembly-kit/bridge-ui` | `usePrimaryCta`, `useSecondaryCta`, `useActionsMenu`                                        |
+| Import path              | Exports                                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------- |
+| `assembly-kit`           | `createAssemblyKit`, `AssemblyKit`, all errors, all schemas, `AssemblyToken`, `createToken` |
+| `assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`, `RetryOptions`                    |
+| `assembly-kit/errors`    | All error classes                                                                           |
+| `assembly-kit/schemas`   | All Zod schemas and inferred types (no client dependency)                                   |
+| `assembly-kit/token`     | `AssemblyToken`, `createToken`, `ClientTokenPayload`, `InternalUserTokenPayload`            |
+| `assembly-kit/logger`    | `createLogger`, `logger`                                                                    |
+| `assembly-kit/bridge-ui` | `usePrimaryCta`, `useSecondaryCta`, `useActionsMenu`                                        |
 
 ## Development
 
