@@ -1,6 +1,6 @@
 {
   "name": "assembly-kit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TypeScript SDK for the Assembly platform",
   "homepage": "https://github.com/madebyoutside/assembly-kit#readme",
   "bugs": {
