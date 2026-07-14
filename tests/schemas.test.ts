@@ -56,6 +56,14 @@ describe("TokenPayloadSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  it("accepts a client token with only clientId (companyId optional)", () => {
+    const result = TokenPayloadSchema.safeParse({
+      clientId: "c1",
+      workspaceId: "ws1",
+    });
+    expect(result.success).toBe(true);
+  });
+
   it("accepts an internal user token (internalUserId)", () => {
     const result = TokenPayloadSchema.safeParse({
       internalUserId: "u1",
@@ -75,14 +83,14 @@ describe("TokenPayloadSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("rejects token missing both internalUserId and clientId+companyId", () => {
+  it("rejects token missing both internalUserId and clientId", () => {
     const result = TokenPayloadSchema.safeParse({ workspaceId: "ws1" });
     expect(result.success).toBe(false);
   });
 
-  it("rejects clientId without companyId", () => {
+  it("rejects token with only companyId and no clientId/internalUserId", () => {
     const result = TokenPayloadSchema.safeParse({
-      clientId: "c1",
+      companyId: "co1",
       workspaceId: "ws1",
     });
     expect(result.success).toBe(false);

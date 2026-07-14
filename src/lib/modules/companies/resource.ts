@@ -17,7 +17,9 @@ export interface ListCompaniesArgs extends ListArgs {
   name?: string;
 }
 
-export class CompaniesResource {
+export class CompaniesResource<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> {
   readonly #transport: Transport;
   readonly #validate: boolean;
 
@@ -33,29 +35,45 @@ export class CompaniesResource {
   }
 
   /** Create a new company. */
-  async create(body: CompanyCreateRequest): Promise<Company> {
+  async create(body: CompanyCreateRequest): Promise<Company<TCustomFields>> {
     const raw: unknown = await this.#transport.post("v1/companies", body);
-    return parseResponse({ schema: CompanyResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: CompanyResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as Company<TCustomFields>;
   }
 
   /** List companies with optional filters. */
-  async list(args: ListCompaniesArgs = {}): Promise<CompaniesResponse> {
+  async list(args: ListCompaniesArgs = {}): Promise<CompaniesResponse<TCustomFields>> {
     const raw: unknown = await this.#transport.get("v1/companies", {
       searchParams: buildSearchParams(args),
     });
-    return parseResponse({ schema: CompaniesResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: CompaniesResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as CompaniesResponse<TCustomFields>;
   }
 
   /** Retrieve a single company by ID. */
-  async retrieve(id: string): Promise<Company> {
+  async retrieve(id: string): Promise<Company<TCustomFields>> {
     const raw: unknown = await this.#transport.get(`v1/companies/${id}`);
-    return parseResponse({ schema: CompanyResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: CompanyResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as Company<TCustomFields>;
   }
 
   /** Update a company. */
-  async update(args: { id: string; body: CompanyUpdateRequest }): Promise<Company> {
+  async update(args: { id: string; body: CompanyUpdateRequest }): Promise<Company<TCustomFields>> {
     const raw: unknown = await this.#transport.patch(`v1/companies/${args.id}`, args.body);
-    return parseResponse({ schema: CompanyResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: CompanyResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as Company<TCustomFields>;
   }
 
   /** Delete a company by ID. */
@@ -64,8 +82,10 @@ export class CompaniesResource {
   }
 
   /** Iterate over all companies, automatically paginating. Default limit per page: 10000. */
-  async listAll(args: Omit<ListCompaniesArgs, "nextToken"> = {}): Promise<Company[]> {
-    return paginate((listArgs) => this.list({ ...args, ...listArgs }), {
+  async listAll(
+    args: Omit<ListCompaniesArgs, "nextToken"> = {},
+  ): Promise<Company<TCustomFields>[]> {
+    return paginate<Company<TCustomFields>>((listArgs) => this.list({ ...args, ...listArgs }), {
       limit: args.limit ?? 10_000,
     });
   }

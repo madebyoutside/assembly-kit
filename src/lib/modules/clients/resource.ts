@@ -14,7 +14,9 @@ export interface ListClientsArgs extends ListArgs {
   givenName?: string;
 }
 
-export class ClientsResource {
+export class ClientsResource<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> {
   readonly #transport: Transport;
   readonly #validate: boolean;
 
@@ -30,27 +32,42 @@ export class ClientsResource {
   }
 
   /** Create a new client. */
-  async create(args: { body: ClientCreateRequest; sendInvite?: boolean }): Promise<Client> {
+  async create(args: {
+    body: ClientCreateRequest;
+    sendInvite?: boolean;
+  }): Promise<Client<TCustomFields>> {
     const searchParams =
       args.sendInvite !== undefined
         ? buildSearchParams({ sendInvite: args.sendInvite })
         : undefined;
     const raw: unknown = await this.#transport.post("v1/clients", args.body, { searchParams });
-    return parseResponse({ schema: ClientResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: ClientResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as Client<TCustomFields>;
   }
 
   /** List clients with optional filters. */
-  async list(args: ListClientsArgs = {}): Promise<ClientsResponse> {
+  async list(args: ListClientsArgs = {}): Promise<ClientsResponse<TCustomFields>> {
     const raw: unknown = await this.#transport.get("v1/clients", {
       searchParams: buildSearchParams(args),
     });
-    return parseResponse({ schema: ClientsResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: ClientsResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as ClientsResponse<TCustomFields>;
   }
 
   /** Retrieve a single client by ID. */
-  async retrieve(id: string): Promise<Client> {
+  async retrieve(id: string): Promise<Client<TCustomFields>> {
     const raw: unknown = await this.#transport.get(`v1/clients/${id}`);
-    return parseResponse({ schema: ClientResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: ClientResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as Client<TCustomFields>;
   }
 
   /** Update a client (PATCH — partial update). */
@@ -58,7 +75,7 @@ export class ClientsResource {
     id: string;
     body: ClientUpdateRequest;
     sendInvite?: boolean;
-  }): Promise<Client> {
+  }): Promise<Client<TCustomFields>> {
     const searchParams =
       args.sendInvite !== undefined
         ? buildSearchParams({ sendInvite: args.sendInvite })
@@ -66,7 +83,11 @@ export class ClientsResource {
     const raw: unknown = await this.#transport.patch(`v1/clients/${args.id}`, args.body, {
       searchParams,
     });
-    return parseResponse({ schema: ClientResponseSchema, data: raw, validate: this.#validate });
+    return parseResponse({
+      schema: ClientResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    }) as Client<TCustomFields>;
   }
 
   /** Delete a client by ID. */
@@ -75,8 +96,8 @@ export class ClientsResource {
   }
 
   /** Iterate over all clients, automatically paginating. Default limit per page: 5000. */
-  async listAll(args: Omit<ListClientsArgs, "nextToken"> = {}): Promise<Client[]> {
-    return paginate((listArgs) => this.list({ ...args, ...listArgs }), {
+  async listAll(args: Omit<ListClientsArgs, "nextToken"> = {}): Promise<Client<TCustomFields>[]> {
+    return paginate<Client<TCustomFields>>((listArgs) => this.list({ ...args, ...listArgs }), {
       limit: args.limit ?? 5_000,
     });
   }

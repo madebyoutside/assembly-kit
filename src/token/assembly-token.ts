@@ -10,7 +10,7 @@ import { decrypt, validatePayload } from "./parse";
 /** A token payload that identifies a client (portal) user. */
 export interface ClientTokenPayload extends TokenPayload {
   clientId: string;
-  companyId: string;
+  companyId?: string;
 }
 
 /** A token payload that identifies an internal (team member) user. */
@@ -109,7 +109,7 @@ export class AssemblyToken {
 
   /** `true` when the token belongs to a client (portal) user. */
   get isClientUser(): boolean {
-    return this.payload.clientId !== undefined && this.payload.companyId !== undefined;
+    return this.payload.clientId !== undefined;
   }
 
   /** `true` when the token belongs to an internal (team member) user. */
@@ -125,7 +125,7 @@ export class AssemblyToken {
     if (!this.isClientUser) {
       throw new AssemblyUnauthorizedError({
         message:
-          "This operation requires a client token (clientId + companyId), but the token does not contain client fields",
+          "This operation requires a client token (clientId), but the token does not contain a clientId",
       });
     }
     return this.payload as ClientTokenPayload;

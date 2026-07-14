@@ -13,7 +13,8 @@ export interface TokenPayload {
 /**
  * Schema for a decrypted Assembly token payload.
  * Unknown fields are silently stripped for forward compatibility.
- * Requires either `internalUserId` (team member) or both `clientId` + `companyId` (portal user).
+ * Requires either `internalUserId` (team member) or `clientId` (portal user).
+ * `companyId` is always optional.
  */
 export const TokenPayloadSchema: z.ZodType<TokenPayload> = z
   .object({
@@ -25,11 +26,6 @@ export const TokenPayloadSchema: z.ZodType<TokenPayload> = z
     tokenId: z.string().optional(),
     workspaceId: z.string().min(1),
   })
-  .refine(
-    (val) =>
-      val.internalUserId !== undefined ||
-      (val.clientId !== undefined && val.companyId !== undefined),
-    {
-      message: "Token must contain either internalUserId, or clientId and companyId",
-    },
-  );
+  .refine((val) => val.internalUserId !== undefined || val.clientId !== undefined, {
+    message: "Token must contain either internalUserId or clientId",
+  });

@@ -31,10 +31,14 @@ export const CompanySchema: z.ZodType<Company> = z.object({
 // ─── Response ─────────────────────────────────────────────────────────────────
 
 export const CompanyResponseSchema: z.ZodType<Company> = CompanySchema;
-export type CompanyResponse = Company;
+export type CompanyResponse<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> = Company<TCustomFields>;
 
-export interface CompaniesResponse {
-  data: Company[] | null;
+export interface CompaniesResponse<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> {
+  data: Company<TCustomFields>[] | null;
   nextToken?: string;
 }
 

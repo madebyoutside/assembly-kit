@@ -46,10 +46,14 @@ export const ClientSchema: z.ZodType<Client> = z.object({
 // ─── Response ─────────────────────────────────────────────────────────────────
 
 export const ClientResponseSchema: z.ZodType<Client> = ClientSchema;
-export type ClientResponse = Client;
+export type ClientResponse<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> = Client<TCustomFields>;
 
-export interface ClientsResponse {
-  data: Client[];
+export interface ClientsResponse<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> {
+  data: Client<TCustomFields>[];
   nextToken?: string;
 }
 
