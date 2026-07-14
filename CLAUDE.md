@@ -5,7 +5,7 @@ TypeScript SDK for the Assembly platform. ESM-only, Node.js 18+ and Bun.
 ## Quick Start
 
 ```ts
-import { createAssemblyKit, KitMode } from "@anitshrsth/assembly-kit";
+import { createAssemblyKit, KitMode } from "assembly-kit";
 
 // Local mode (default) — only apiKey required
 const kit = createAssemblyKit({ apiKey: "your-key" });
@@ -114,7 +114,7 @@ The generics only narrow types — runtime parsing still uses the loose
 Standalone token decryption (not required for normal SDK usage):
 
 ```ts
-import { AssemblyToken, createToken } from "@anitshrsth/assembly-kit";
+import { AssemblyToken, createToken } from "assembly-kit";
 
 const token = new AssemblyToken({ token: encryptedHex, apiKey });
 token.workspaceId; // string
@@ -136,7 +136,7 @@ const encrypted = createToken({
 
 ## Error Handling
 
-All errors extend `AssemblyError`. Import from `@anitshrsth/assembly-kit`:
+All errors extend `AssemblyError`. Import from `assembly-kit`:
 
 ```ts
 import {
@@ -151,7 +151,7 @@ import {
   AssemblyServerError, // 500 — server error
   AssemblyResponseParseError, // 500 — Zod validation failed (.zodError)
   AssemblyConnectionError, // 503 — network error
-} from "@anitshrsth/assembly-kit";
+} from "assembly-kit";
 
 try {
   await kit.companies.retrieve(id);
@@ -169,14 +169,14 @@ try {
 Zod 4 schemas and inferred types for all resources:
 
 ```ts
-import { ClientSchema, CompanySchema, TaskSchema } from "@anitshrsth/assembly-kit/schemas";
-import type { Client, Company, Task } from "@anitshrsth/assembly-kit/schemas";
+import { ClientSchema, CompanySchema, TaskSchema } from "assembly-kit/schemas";
+import type { Client, Company, Task } from "assembly-kit/schemas";
 
 // Response schemas (paginated)
-import { ClientsResponseSchema } from "@anitshrsth/assembly-kit/schemas";
+import { ClientsResponseSchema } from "assembly-kit/schemas";
 
 // Request schemas
-import { ClientCreateRequestSchema } from "@anitshrsth/assembly-kit/schemas";
+import { ClientCreateRequestSchema } from "assembly-kit/schemas";
 ```
 
 ## Multi-Workspace (React Server Components)
@@ -185,7 +185,7 @@ Use React `cache()` to deduplicate per request:
 
 ```ts
 import { cache } from "react";
-import { createAssemblyKit } from "@anitshrsth/assembly-kit";
+import { createAssemblyKit } from "assembly-kit";
 
 export const getAssemblyKit = cache((apiKey: string, workspaceId: string) =>
   createAssemblyKit({ apiKey, workspaceId }),
@@ -194,12 +194,12 @@ export const getAssemblyKit = cache((apiKey: string, workspaceId: string) =>
 
 ## Entry Points
 
-| Import path                          | Key exports                                                                                               |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `@anitshrsth/assembly-kit`           | `createAssemblyKit`, `AssemblyKit`, errors, schemas, token utils                                          |
-| `@anitshrsth/assembly-kit/schemas`   | All Zod schemas and inferred types                                                                        |
-| `@anitshrsth/assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`                                                  |
-| `@anitshrsth/assembly-kit/errors`    | All error classes                                                                                         |
-| `@anitshrsth/assembly-kit/token`     | `AssemblyToken`, `createToken`                                                                            |
-| `@anitshrsth/assembly-kit/logger`    | `createLogger`, `logger` (requires pino peer dep)                                                         |
-| `@anitshrsth/assembly-kit/bridge-ui` | `usePrimaryCta`, `useSecondaryCta`, `useActionsMenu` (requires react + @assembly-js/app-bridge peer deps) |
+| Import path              | Key exports                                                                                               |
+| ------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `assembly-kit`           | `createAssemblyKit`, `AssemblyKit`, errors, schemas, token utils                                          |
+| `assembly-kit/schemas`   | All Zod schemas and inferred types                                                                        |
+| `assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`                                                  |
+| `assembly-kit/errors`    | All error classes                                                                                         |
+| `assembly-kit/token`     | `AssemblyToken`, `createToken`                                                                            |
+| `assembly-kit/logger`    | `createLogger`, `logger` (requires pino peer dep)                                                         |
+| `assembly-kit/bridge-ui` | `usePrimaryCta`, `useSecondaryCta`, `useActionsMenu` (requires react + @assembly-js/app-bridge peer deps) |
