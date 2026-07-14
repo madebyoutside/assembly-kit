@@ -2,14 +2,14 @@
   "name": "assembly-kit",
   "version": "0.0.2",
   "description": "TypeScript SDK for the Assembly platform",
-  "homepage": "https://github.com/outsidestudio/assembly-kit#readme",
+  "homepage": "https://github.com/madebyoutside/assembly-kit#readme",
   "bugs": {
-    "url": "https://github.com/outsidestudio/assembly-kit/issues"
+    "url": "https://github.com/madebyoutside/assembly-kit/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/outsidestudio/assembly-kit.git"
+    "url": "git+https://github.com/madebyoutside/assembly-kit.git"
   },
   "files": [
     "dist",
