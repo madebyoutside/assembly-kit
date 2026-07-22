@@ -409,7 +409,15 @@ import { logger } from "assembly-kit/logger";
 logger.info("starting up");
 ```
 
-The logger emits plain JSON in all environments (no worker-thread transport, so it works in serverless runtimes like Vercel). Pipe output through the `pino-pretty` CLI locally if you want human-readable logs. The default log level respects the `LOG_LEVEL` environment variable.
+The logger emits plain JSON in all environments (no worker-thread transport, so it works in serverless runtimes like Vercel). `Error` objects are serialized with Pino's `err` serializer so message and stack survive — no more `{}` in Vercel logs. The default log level respects the `LOG_LEVEL` environment variable.
+
+For human-readable local output, use `createPrettyLogger`. It runs `pino-pretty` as a **synchronous stream** (no worker thread), so it is serverless-safe, but gate it to local runs to keep production plain JSON. Install `pino-pretty` (optional peer dependency) to use it:
+
+```typescript
+import { createLogger, createPrettyLogger } from "assembly-kit/logger";
+
+const log = process.env.NODE_ENV === "development" ? await createPrettyLogger() : createLogger();
+```
 
 ### App Bridge (React Hooks)
 
@@ -498,7 +506,7 @@ useActionsMenu([{ label: "Archive", onClick: () => archive() }], hasItems);
 | `assembly-kit/errors`    | All error classes                                                                           |
 | `assembly-kit/schemas`   | All Zod schemas and inferred types (no client dependency)                                   |
 | `assembly-kit/token`     | `AssemblyToken`, `createToken`, `ClientTokenPayload`, `InternalUserTokenPayload`            |
-| `assembly-kit/logger`    | `createLogger`, `logger`                                                                    |
+| `assembly-kit/logger`    | `createLogger`, `createPrettyLogger`, `logger`                                              |
 | `assembly-kit/bridge-ui` | `usePrimaryCta`, `useSecondaryCta`, `useActionsMenu`                                        |
 
 ## Development
