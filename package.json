@@ -49,6 +49,7 @@
     "@typescript/native-preview": "7.0.0-dev.20260505.1",
     "bumpp": "^11.0.1",
     "pino": "^10.3.1",
+    "pino-pretty": "^13.1.2",
     "react": "^19.2.5",
     "typescript": "^6.0.3",
     "vite-plus": "^0.1.20",
@@ -57,6 +58,7 @@
   "peerDependencies": {
     "@assembly-js/app-bridge": "^1.1.1",
     "pino": ">=9",
+    "pino-pretty": ">=11",
     "react": ">=18",
     "typescript": ">=5",
     "zod": ">=4"
@@ -66,6 +68,9 @@
       "optional": true
     },
     "pino": {
+      "optional": true
+    },
+    "pino-pretty": {
       "optional": true
     },
     "react": {

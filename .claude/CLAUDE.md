@@ -37,15 +37,15 @@ Always keep docs in sync with the code. Do not defer documentation to a later st
 
 ### Entry Points
 
-| Export                   | Purpose                                                                                |
-| ------------------------ | -------------------------------------------------------------------------------------- |
-| `assembly-kit`           | `createAssemblyKit()`, error classes, token utilities, `paginate()`                    |
-| `assembly-kit/schemas`   | All Zod schemas and inferred types (no client dependency)                              |
-| `assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`                               |
-| `assembly-kit/errors`    | All error classes                                                                      |
-| `assembly-kit/token`     | `AssemblyToken`, `createToken`                                                         |
-| `assembly-kit/logger`    | `createLogger`, `logger` (requires pino peer dep)                                      |
-| `assembly-kit/bridge-ui` | React hooks wrapping app-bridge (`usePrimaryCta`, `useSecondaryCta`, `useActionsMenu`) |
+| Export                   | Purpose                                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------------------- |
+| `assembly-kit`           | `createAssemblyKit()`, error classes, token utilities, `paginate()`                           |
+| `assembly-kit/schemas`   | All Zod schemas and inferred types (no client dependency)                                     |
+| `assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`                                      |
+| `assembly-kit/errors`    | All error classes                                                                             |
+| `assembly-kit/token`     | `AssemblyToken`, `createToken`                                                                |
+| `assembly-kit/logger`    | `createLogger`, `createPrettyLogger`, `logger` (pino peer dep; pretty also needs pino-pretty) |
+| `assembly-kit/bridge-ui` | React hooks wrapping app-bridge (`usePrimaryCta`, `useSecondaryCta`, `useActionsMenu`)        |
 
 ### Source Layer Dependency Order
 

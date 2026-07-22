@@ -194,12 +194,12 @@ export const getAssemblyKit = cache((apiKey: string, workspaceId: string) =>
 
 ## Entry Points
 
-| Import path              | Key exports                                                                                               |
-| ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `assembly-kit`           | `createAssemblyKit`, `AssemblyKit`, errors, schemas, token utils                                          |
-| `assembly-kit/schemas`   | All Zod schemas and inferred types                                                                        |
-| `assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`                                                  |
-| `assembly-kit/errors`    | All error classes                                                                                         |
-| `assembly-kit/token`     | `AssemblyToken`, `createToken`                                                                            |
-| `assembly-kit/logger`    | `createLogger`, `logger` (requires pino peer dep)                                                         |
-| `assembly-kit/bridge-ui` | `usePrimaryCta`, `useSecondaryCta`, `useActionsMenu` (requires react + @assembly-js/app-bridge peer deps) |
+| Import path              | Key exports                                                                                                          |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `assembly-kit`           | `createAssemblyKit`, `AssemblyKit`, errors, schemas, token utils                                                     |
+| `assembly-kit/schemas`   | All Zod schemas and inferred types                                                                                   |
+| `assembly-kit/client`    | `createAssemblyKit`, `AssemblyKit`, `AssemblyKitOptions`                                                             |
+| `assembly-kit/errors`    | All error classes                                                                                                    |
+| `assembly-kit/token`     | `AssemblyToken`, `createToken`                                                                                       |
+| `assembly-kit/logger`    | `createLogger`, `createPrettyLogger`, `logger` (requires pino peer dep; `createPrettyLogger` also needs pino-pretty) |
+| `assembly-kit/bridge-ui` | `usePrimaryCta`, `useSecondaryCta`, `useActionsMenu` (requires react + @assembly-js/app-bridge peer deps)            |
