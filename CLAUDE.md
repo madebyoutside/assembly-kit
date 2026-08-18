@@ -126,6 +126,7 @@ token.companyId; // string | undefined
 token.internalUserId; // string | undefined
 token.isClientUser; // boolean
 token.isInternalUser; // boolean
+token.isProxying; // boolean — internal user previewing as a client (both IDs present)
 
 const client = token.ensureIsClient(); // ClientTokenPayload (throws if not client)
 const internal = token.ensureIsInternalUser(); // InternalUserTokenPayload (throws if not internal)

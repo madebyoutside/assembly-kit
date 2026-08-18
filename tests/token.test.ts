@@ -13,6 +13,7 @@ import {
   BLOCK_ALIGNED_WORKSPACE_ID,
   CLIENT_TOKEN,
   INTERNAL_USER_TOKEN,
+  PROXY_TOKEN,
   TEST_API_KEY,
   TEST_BASE_URL,
   TEST_CLIENT_ID,
@@ -192,6 +193,22 @@ describe("AssemblyToken getters", () => {
 // Identity checks
 // ---------------------------------------------------------------------------
 describe("AssemblyToken identity checks", () => {
+  it("proxy token (internalUserId + clientId) is flagged as proxying", () => {
+    const t = new AssemblyToken({ apiKey: TEST_API_KEY, token: PROXY_TOKEN });
+    expect(t.isProxying).toBe(true);
+    expect(t.isClientUser).toBe(true);
+    expect(t.isInternalUser).toBe(true);
+    expect(t.ensureIsClient().clientId).toBe(TEST_CLIENT_ID);
+    expect(t.ensureIsInternalUser().internalUserId).toBe(TEST_INTERNAL_USER_ID);
+  });
+
+  it("isProxying is false for single-identity tokens", () => {
+    expect(new AssemblyToken({ apiKey: TEST_API_KEY, token: CLIENT_TOKEN }).isProxying).toBe(false);
+    expect(new AssemblyToken({ apiKey: TEST_API_KEY, token: INTERNAL_USER_TOKEN }).isProxying).toBe(
+      false,
+    );
+  });
+
   it("isClientUser is true for client tokens", () => {
     const t = new AssemblyToken({ apiKey: TEST_API_KEY, token: CLIENT_TOKEN });
     expect(t.isClientUser).toBe(true);

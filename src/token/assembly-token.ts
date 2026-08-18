@@ -118,6 +118,15 @@ export class AssemblyToken {
   }
 
   /**
+   * `true` when an internal user is proxying as a client (CRM "preview as client"):
+   * both `internalUserId` and `clientId` are present. Both `isClientUser` and
+   * `isInternalUser` are also `true` in this case — branch on this getter first.
+   */
+  get isProxying(): boolean {
+    return this.payload.internalUserId !== undefined && this.payload.clientId !== undefined;
+  }
+
+  /**
    * Assert that the token belongs to a client user and return the narrowed payload.
    * @throws {AssemblyUnauthorizedError} If the token does not represent a client user.
    */
