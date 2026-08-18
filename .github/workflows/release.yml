@@ -1,34 +1,45 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
 
 permissions:
   contents: write
-  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 jobs:
-  release:
-    name: Release Package
+  release-please:
+    name: Release PR
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    name: Publish to npm
+    needs: release-please
+    if: needs.release-please.outputs.released == 'true'
     runs-on: ubuntu-latest
     environment: release
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - name: Checkout main
+      - name: Checkout release tag
         uses: actions/checkout@v6
         with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Resolve version from release tag
-        env:
-          TAG: ${{ github.event.release.tag_name }}
-        run: |
-          if ! echo "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
-            echo "::error::Release tag '$TAG' is not a vSEMVER tag (e.g. v0.0.6, v10.1.11)."
-            exit 1
-          fi
-          echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
+          ref: ${{ needs.release-please.outputs.tag }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -54,30 +65,13 @@ jobs:
       - name: Run tests
         run: bun run test
 
-      - name: Bump to the released version
-        env:
-          TAG: ${{ github.event.release.tag_name }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          npm version "$VERSION" --no-git-tag-version --allow-same-version
-          printf '/** SDK version string sent with every API request. */\nexport const SDK_VERSION: string = "%s";\n' "$VERSION" > src/version.ts
-          if git diff --quiet; then
-            echo "Already at $VERSION"
-          else
-            git commit -am "chore: release v$VERSION"
-            git push origin HEAD:main
-          fi
-          git tag -f "$TAG"
-          git push -f origin "refs/tags/$TAG"
-
       - name: Build
         run: bun run build
 
       # No NODE_AUTH_TOKEN: auth comes from OIDC trusted publishing.
       # Requires a trusted publisher configured on npmjs.com for this repo,
       # workflow (release.yml), and the "release" environment.
-      - name: Publish to npm
+      - name: Publish
         run: npm pack && npm publish ./*.tgz --access public --provenance
         env:
           NPM_CONFIG_PROVENANCE: true
