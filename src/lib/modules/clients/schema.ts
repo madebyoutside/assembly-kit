@@ -6,7 +6,7 @@ export interface Client<TCustomFields extends Record<string, unknown> = Record<s
   avatarImageUrl: string | null;
   companyIds?: string[];
   createdAt: string;
-  creationMethod: "client" | "directSignUp" | "internalUser";
+  creationMethod: "client" | "directSignUp" | "import" | "internalUser";
   /** @deprecated Use `companyIds` instead. */
   companyId?: string;
   customFields?: TCustomFields | null;
@@ -19,16 +19,16 @@ export interface Client<TCustomFields extends Record<string, unknown> = Record<s
   inviteUrl?: string;
   lastLoginDate: string | null;
   object: "client";
-  status: "active" | "invited" | "notInvited";
+  status: "active" | "deleted" | "invited" | "notInvited" | "unknown";
   updatedAt?: string;
 }
 
-export const ClientSchema: z.ZodType<Client> = z.object({
+const clientShape = {
   avatarImageUrl: z.string().nullable(),
   companyId: z.string().optional(),
   companyIds: z.array(z.string()).optional(),
   createdAt: z.iso.datetime(),
-  creationMethod: z.enum(["client", "directSignUp", "internalUser"]),
+  creationMethod: z.enum(["client", "directSignUp", "import", "internalUser"]),
   customFields: z.record(z.string(), z.unknown()).nullable().optional(),
   email: z.string(),
   fallbackColor: z.string().nullable(),
@@ -39,8 +39,25 @@ export const ClientSchema: z.ZodType<Client> = z.object({
   inviteUrl: z.string().optional(),
   lastLoginDate: z.string().nullable(),
   object: z.literal("client"),
-  status: z.enum(["active", "invited", "notInvited"]),
+  status: z.enum(["unknown", "deleted", "active", "notInvited", "invited"]),
   updatedAt: z.iso.datetime().optional(),
+};
+
+export const ClientSchema: z.ZodType<Client> = z.object(clientShape);
+
+/**
+ * `appVisibility` is documented in prose but absent from the OpenAPI response
+ * schema, so its group shape is kept loose rather than guessed at.
+ */
+export interface ClientWithAppVisibility<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> extends Client<TCustomFields> {
+  appVisibility?: Record<string, unknown>[];
+}
+
+export const ClientWithAppVisibilitySchema: z.ZodType<ClientWithAppVisibility> = z.object({
+  ...clientShape,
+  appVisibility: z.array(z.record(z.string(), z.unknown())).optional(),
 });
 
 // ─── Response ─────────────────────────────────────────────────────────────────

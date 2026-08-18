@@ -4,8 +4,19 @@ import { buildSearchParams } from "src/transport/build-search-params";
 import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
-import { AssemblyFileResponseSchema, AssemblyFilesResponseSchema } from "./schema";
-import type { AssemblyFile, AssemblyFilesResponse } from "./schema";
+import {
+  AssemblyFileResponseSchema,
+  AssemblyFilesResponseSchema,
+  FileDownloadUrlResponseSchema,
+  FilePermissionsResponseSchema,
+} from "./schema";
+import type {
+  AssemblyFile,
+  AssemblyFilesResponse,
+  ClientPermissions,
+  FileDownloadUrlResponse,
+  FilePermissionsResponse,
+} from "./schema";
 
 export interface ListFilesArgs extends ListArgs {
   channelId: string;
@@ -62,6 +73,49 @@ export class FilesResource {
     const raw: unknown = await this.#transport.get(`v1/files/${id}`);
     return parseResponse({
       schema: AssemblyFileResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
+  /** Retrieve a short-lived presigned download URL for a file's contents. */
+  async retrieveDownloadUrl(id: string): Promise<FileDownloadUrlResponse> {
+    const raw: unknown = await this.#transport.get(`v1/files/${id}/download-url`);
+    return parseResponse({
+      schema: FileDownloadUrlResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
+  /** Download a file's raw contents. */
+  async download(id: string): Promise<ArrayBuffer> {
+    return this.#transport.getRaw(`v1/files/${id}/download`);
+  }
+
+  /** Update the client access level on a folder. */
+  async updateFolderPermissions(args: {
+    id: string;
+    clientPermissions: ClientPermissions;
+  }): Promise<FilePermissionsResponse> {
+    const raw: unknown = await this.#transport.put(`v1/files/${args.id}/permissions/`, {
+      clientPermissions: args.clientPermissions,
+    });
+    return parseResponse({
+      schema: FilePermissionsResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
+  /** Update the client access level on a file channel's root folder. */
+  async updateRootFolderPermissions(args: {
+    channelId: string;
+    clientPermissions: ClientPermissions;
+  }): Promise<FilePermissionsResponse> {
+    const raw: unknown = await this.#transport.put("v1/files/root/permissions", args);
+    return parseResponse({
+      schema: FilePermissionsResponseSchema,
       data: raw,
       validate: this.#validate,
     });

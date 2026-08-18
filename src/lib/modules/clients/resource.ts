@@ -4,8 +4,18 @@ import { buildSearchParams } from "src/transport/build-search-params";
 import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
-import { ClientResponseSchema, ClientsResponseSchema } from "./schema";
-import type { Client, ClientCreateRequest, ClientUpdateRequest, ClientsResponse } from "./schema";
+import {
+  ClientResponseSchema,
+  ClientWithAppVisibilitySchema,
+  ClientsResponseSchema,
+} from "./schema";
+import type {
+  Client,
+  ClientCreateRequest,
+  ClientUpdateRequest,
+  ClientWithAppVisibility,
+  ClientsResponse,
+} from "./schema";
 
 export interface ListClientsArgs extends ListArgs {
   companyId?: string;
@@ -68,6 +78,16 @@ export class ClientsResource<
       data: raw,
       validate: this.#validate,
     }) as Client<TCustomFields>;
+  }
+
+  /** Retrieve a client by ID together with the apps visible to them, grouped by company. */
+  async retrieveWithAppVisibility(id: string): Promise<ClientWithAppVisibility<TCustomFields>> {
+    const raw: unknown = await this.#transport.get(`v1/clients/${id}/app-visibility`);
+    return parseResponse({
+      schema: ClientWithAppVisibilitySchema,
+      data: raw,
+      validate: this.#validate,
+    }) as ClientWithAppVisibility<TCustomFields>;
   }
 
   /** Update a client (PATCH — partial update). */

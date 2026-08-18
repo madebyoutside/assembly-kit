@@ -5,7 +5,7 @@ import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
 import { ProductResponseSchema, ProductsResponseSchema } from "./schema";
-import type { Product, ProductsResponse } from "./schema";
+import type { Product, ProductCreateRequest, ProductsResponse } from "./schema";
 
 export class ProductsResource {
   readonly #transport: Transport;
@@ -20,6 +20,12 @@ export class ProductsResource {
   }) {
     this.#transport = transport;
     this.#validate = validateResponses;
+  }
+
+  /** Create a product. */
+  async create(body: ProductCreateRequest): Promise<Product> {
+    const raw: unknown = await this.#transport.post("v1/products", body);
+    return parseResponse({ schema: ProductResponseSchema, data: raw, validate: this.#validate });
   }
 
   /** List products. */

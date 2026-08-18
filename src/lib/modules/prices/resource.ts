@@ -5,7 +5,7 @@ import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
 import { PriceResponseSchema, PricesResponseSchema } from "./schema";
-import type { Price, PricesResponse } from "./schema";
+import type { Price, PriceCreateRequest, PricesResponse } from "./schema";
 
 export interface ListPricesArgs extends ListArgs {
   productId?: string;
@@ -24,6 +24,12 @@ export class PricesResource {
   }) {
     this.#transport = transport;
     this.#validate = validateResponses;
+  }
+
+  /** Create a price for an existing product. */
+  async create(body: PriceCreateRequest): Promise<Price> {
+    const raw: unknown = await this.#transport.post("v1/prices", body);
+    return parseResponse({ schema: PriceResponseSchema, data: raw, validate: this.#validate });
   }
 
   /** List prices with optional filters. */

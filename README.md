@@ -141,36 +141,43 @@ const kit = createAssemblyKit({
 
 #### Resource namespaces
 
-| Namespace               | Methods                                                                 |
-| ----------------------- | ----------------------------------------------------------------------- |
-| `workspace`             | `retrieve()`                                                            |
-| `clients`               | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `listAll()` |
-| `companies`             | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `listAll()` |
-| `internalUsers`         | `list()`, `retrieve()`, `listAll()`                                     |
-| `customFields`          | `list()`                                                                |
-| `customFieldOptions`    | `list()`                                                                |
-| `notes`                 | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `listAll()` |
-| `messageChannels`       | `list()`, `retrieve()`, `create()`, `listAll()`                         |
-| `messages`              | `list()`, `send()`, `listAll()`                                         |
-| `products`              | `list()`, `retrieve()`, `listAll()`                                     |
-| `prices`                | `list()`, `retrieve()`, `listAll()`                                     |
-| `invoiceTemplates`      | `list()`, `listAll()`                                                   |
-| `invoices`              | `list()`, `retrieve()`, `create()`, `listAll()`                         |
-| `subscriptionTemplates` | `list()`, `listAll()`                                                   |
-| `subscriptions`         | `list()`, `retrieve()`, `create()`, `cancel()`, `listAll()`             |
-| `payments`              | `list()`, `listAll()`                                                   |
-| `fileChannels`          | `list()`, `retrieve()`, `create()`, `listAll()`                         |
-| `files`                 | `list()`, `retrieve()`, `create()`, `delete()`, `listAll()`             |
-| `contractTemplates`     | `list()`, `retrieve()`, `listAll()`                                     |
-| `contracts`             | `list()`, `retrieve()`, `send()`                                        |
-| `forms`                 | `list()`, `retrieve()`, `listAll()`                                     |
-| `formResponses`         | `list()`, `create()`                                                    |
-| `tasks`                 | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `listAll()` |
-| `taskTemplates`         | `list()`, `retrieve()`, `listAll()`                                     |
-| `notifications`         | `list()`, `create()`, `delete()`, `markRead()`, `markUnread()`          |
-| `events`                | `list()`, `retrieve()`, `create()`, `listAll()`                         |
-| `appConnections`        | `list()`, `create()`                                                    |
-| `appInstalls`           | `list()`, `retrieve()`                                                  |
+| Namespace               | Methods                                                                                                                                                          |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `workspace`             | `retrieve()`                                                                                                                                                     |
+| `me`                    | `retrieve()`                                                                                                                                                     |
+| `clients`               | `list()`, `retrieve()`, `retrieveWithAppVisibility()`, `create()`, `update()`, `delete()`, `listAll()`                                                           |
+| `companies`             | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `addClients()`, `listAll()`                                                                          |
+| `internalUsers`         | `list()`, `retrieve()`, `update()`, `retrieveNotificationSettings()`, `listAll()`                                                                                |
+| `customFields`          | `list()`, `create()`                                                                                                                                             |
+| `customFieldOptions`    | `list()`                                                                                                                                                         |
+| `notes`                 | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `listAll()`                                                                                          |
+| `messageChannels`       | `list()`, `retrieve()`, `create()`, `listUnread()`, `listAll()`                                                                                                  |
+| `messages`              | `list()`, `send()`, `listAll()`                                                                                                                                  |
+| `products`              | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
+| `prices`                | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
+| `invoiceTemplates`      | `list()`, `listAll()`                                                                                                                                            |
+| `invoices`              | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
+| `subscriptionTemplates` | `list()`, `listAll()`                                                                                                                                            |
+| `subscriptions`         | `list()`, `retrieve()`, `create()`, `cancel()`, `listAll()`                                                                                                      |
+| `refunds`               | `list()`, `create()`, `listAll()`                                                                                                                                |
+| `payments`              | `list()`, `listAll()`                                                                                                                                            |
+| `fileChannels`          | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
+| `files`                 | `list()`, `retrieve()`, `create()`, `delete()`, `retrieveDownloadUrl()`, `download()`, `updateFolderPermissions()`, `updateRootFolderPermissions()`, `listAll()` |
+| `contractTemplates`     | `list()`, `retrieve()`, `listAll()`                                                                                                                              |
+| `contracts`             | `list()`, `retrieve()`, `send()`                                                                                                                                 |
+| `forms`                 | `list()`, `retrieve()`, `create()`, `listSubmissions()`, `listAllSubmissions()`, `listAll()`                                                                     |
+| `formResponses`         | `list()`, `create()`                                                                                                                                             |
+| `tasks`                 | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `listAll()`                                                                                          |
+| `taskComments`          | `list()`, `retrieve()`, `delete()`, `listAll()`                                                                                                                  |
+| `taskTemplates`         | `list()`, `retrieve()`, `listAll()`                                                                                                                              |
+| `notifications`         | `list()`, `retrieve()`, `create()`, `delete()`, `markRead()`, `markUnread()`                                                                                     |
+| `events`                | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
+| `appConnections`        | `list()`, `create()`                                                                                                                                             |
+| `appInstalls`           | `list()`, `retrieve()`, `retrieveNotificationSettings()`, `createNotificationSettings()`, `updateNotificationSettings()`                                         |
+
+`files.download()` returns an `ArrayBuffer` — the endpoint streams `application/octet-stream`
+rather than JSON. Use `files.retrieveDownloadUrl()` instead when you want a presigned URL to
+hand to a browser.
 
 ### Pagination
 

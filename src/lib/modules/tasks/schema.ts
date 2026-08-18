@@ -4,9 +4,9 @@ import { z } from "zod";
 // Base types
 // ---------------------------------------------------------------------------
 
-export type TaskStatus = "done" | "inProgress" | "todo";
+export type TaskStatus = "completed" | "inProgress" | "todo";
 
-export const TaskStatusSchema: z.ZodType<TaskStatus> = z.enum(["todo", "inProgress", "done"]);
+export const TaskStatusSchema: z.ZodType<TaskStatus> = z.enum(["todo", "inProgress", "completed"]);
 
 export interface Task {
   assigneeId?: string;

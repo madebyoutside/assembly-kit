@@ -176,6 +176,16 @@ describe("ClientSchema", () => {
     const { email: _, ...noEmail } = valid;
     expect(ClientSchema.safeParse(noEmail).success).toBe(false);
   });
+
+  it("accepts every status the API documents", () => {
+    for (const status of ["unknown", "deleted", "active", "notInvited", "invited"]) {
+      expect(ClientSchema.safeParse({ ...valid, status }).success).toBe(true);
+    }
+  });
+
+  it("accepts an imported client", () => {
+    expect(ClientSchema.safeParse({ ...valid, creationMethod: "import" }).success).toBe(true);
+  });
 });
 
 // ─── InternalUserSchema ───────────────────────────────────────────────────────
@@ -298,14 +308,14 @@ describe("CustomFieldSchema", () => {
 // ─── TaskStatusSchema ─────────────────────────────────────────────────────────
 
 describe("TaskStatusSchema", () => {
-  it("accepts todo, inProgress, done", () => {
+  it("accepts todo, inProgress, completed", () => {
     expect(TaskStatusSchema.safeParse("todo").success).toBe(true);
     expect(TaskStatusSchema.safeParse("inProgress").success).toBe(true);
-    expect(TaskStatusSchema.safeParse("done").success).toBe(true);
+    expect(TaskStatusSchema.safeParse("completed").success).toBe(true);
   });
 
   it("rejects unknown status", () => {
-    expect(TaskStatusSchema.safeParse("completed").success).toBe(false);
+    expect(TaskStatusSchema.safeParse("done").success).toBe(false);
   });
 });
 
@@ -391,7 +401,7 @@ describe("TasksResponseSchema", () => {
           createdAt: "2024-01-01T00:00:00.000Z",
           id: "t2",
           object: "task" as const,
-          status: "done",
+          status: "completed",
           updatedAt: "2024-01-02T00:00:00.000Z",
         },
       ],

@@ -74,3 +74,45 @@ export const CompanyUpdateRequestSchema: z.ZodType<CompanyUpdateRequest> = z.obj
   iconImageUrl: z.string().optional(),
   name: z.string().optional(),
 });
+
+// ─── Add clients ──────────────────────────────────────────────────────────────
+
+export interface CompanyAddClientsRequest {
+  clientIds: string[];
+}
+
+export const CompanyAddClientsRequestSchema: z.ZodType<CompanyAddClientsRequest> = z.object({
+  clientIds: z.array(z.string()).min(1),
+});
+
+export interface CompanyAddClientError {
+  clientId?: string;
+  error?: {
+    code?: string;
+    message?: string;
+    type?: string;
+  };
+}
+
+export interface CompanyAddClientsResponse {
+  addClientErrors?: CompanyAddClientError[];
+  addedClientIds?: string[];
+}
+
+export const CompanyAddClientsResponseSchema: z.ZodType<CompanyAddClientsResponse> = z.object({
+  addClientErrors: z
+    .array(
+      z.object({
+        clientId: z.string().optional(),
+        error: z
+          .object({
+            code: z.string().optional(),
+            message: z.string().optional(),
+            type: z.string().optional(),
+          })
+          .optional(),
+      }),
+    )
+    .optional(),
+  addedClientIds: z.array(z.string()).optional(),
+});
