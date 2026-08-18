@@ -2,8 +2,12 @@ import { buildSearchParams } from "src/transport/build-search-params";
 import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
-import { ListCustomFieldResponseSchema } from "./schema";
-import type { ListCustomFieldResponse } from "./schema";
+import { CustomFieldsCreateResponseSchema, ListCustomFieldResponseSchema } from "./schema";
+import type {
+  CustomFieldsCreateRequest,
+  CustomFieldsCreateResponse,
+  ListCustomFieldResponse,
+} from "./schema";
 
 export class CustomFieldsResource {
   readonly #transport: Transport;
@@ -18,6 +22,16 @@ export class CustomFieldsResource {
   }) {
     this.#transport = transport;
     this.#validate = validateResponses;
+  }
+
+  /** Create one or more custom fields. */
+  async create(body: CustomFieldsCreateRequest): Promise<CustomFieldsCreateResponse> {
+    const raw = await this.#transport.post<unknown>("v1/custom-fields", body);
+    return parseResponse({
+      schema: CustomFieldsCreateResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
   }
 
   /** List custom fields with optional entity type filter. */

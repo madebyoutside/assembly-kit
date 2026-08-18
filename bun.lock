@@ -9,7 +9,7 @@
         "p-throttle": "^8.1.0",
       },
       "devDependencies": {
-        "@assembly-js/app-bridge": "^1.1.1",
+        "@assembly-js/app-bridge": "^1.4.0",
         "@types/node": "^25.6.0",
         "@types/react": "^19.2.14",
         "@typescript/native-preview": "7.0.0-dev.20260505.1",
@@ -40,7 +40,7 @@
     },
   },
   "packages": {
-    "@assembly-js/app-bridge": ["@assembly-js/app-bridge@1.1.1", "", {}, "sha512-NWD8FuRBmLb8+5bMHX8NtepSnIVShmmYoPPD6rHfcFrkN9SKm61/vdCASJnMViWVOjItuKku9QSpn6sOy4L6Og=="],
+    "@assembly-js/app-bridge": ["@assembly-js/app-bridge@1.4.0", "", {}, "sha512-NAdRvsTfQFIWWi/XqGfDbjusO08fB6MncbTHn8LPrp+l20/4PGawvMJjOI81mdKZz+2ieg7AwTJaRUwWhS2eUg=="],
 
     "@emnapi/core": ["@emnapi/core@1.9.2", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.1", "tslib": "^2.4.0" } }, "sha512-UC+ZhH3XtczQYfOlu3lNEkdW/p4dsJ1r/bP7H8+rhao3TTTMO1ATq/4DdIi23XuGoFY+Cz0JmCbdVl0hz9jZcA=="],
 

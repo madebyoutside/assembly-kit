@@ -38,3 +38,17 @@ export const ProductsResponseSchema: z.ZodType<ProductsResponse> = z.object({
   data: z.array(ProductSchema).nullable(),
   nextToken: z.string().optional(),
 });
+
+// ─── Requests ─────────────────────────────────────────────────────────────────
+
+export interface ProductCreateRequest {
+  imageUrls?: string[];
+  name: string;
+  status?: "active" | "archived";
+}
+
+export const ProductCreateRequestSchema: z.ZodType<ProductCreateRequest> = z.object({
+  imageUrls: z.array(z.string()).optional(),
+  name: z.string(),
+  status: z.enum(["active", "archived"]).optional(),
+});

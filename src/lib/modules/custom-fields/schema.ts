@@ -98,3 +98,36 @@ export interface ListCustomFieldResponse {
 export const ListCustomFieldResponseSchema: z.ZodType<ListCustomFieldResponse> = z.object({
   data: z.array(CustomFieldSchema).transform((v) => v || []),
 });
+
+// ─── Requests ─────────────────────────────────────────────────────────────────
+
+export interface CustomFieldCreateInput {
+  entityType: CustomFieldEntityType;
+  name: string;
+  /** Only valid for `multiSelect` fields. */
+  options?: { label: string }[];
+  type: CustomFieldType;
+}
+
+export const CustomFieldCreateInputSchema: z.ZodType<CustomFieldCreateInput> = z.object({
+  entityType: CustomFieldEntityTypeSchema,
+  name: z.string(),
+  options: z.array(z.object({ label: z.string() })).optional(),
+  type: CustomFieldTypeSchema,
+});
+
+export interface CustomFieldsCreateRequest {
+  customFields: CustomFieldCreateInput[];
+}
+
+export const CustomFieldsCreateRequestSchema: z.ZodType<CustomFieldsCreateRequest> = z.object({
+  customFields: z.array(CustomFieldCreateInputSchema),
+});
+
+export interface CustomFieldsCreateResponse {
+  customFields: CustomField[];
+}
+
+export const CustomFieldsCreateResponseSchema: z.ZodType<CustomFieldsCreateResponse> = z.object({
+  customFields: z.array(CustomFieldSchema).transform((v) => v || []),
+});

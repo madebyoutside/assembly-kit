@@ -37,6 +37,8 @@ export interface RequestOpts {
 
 export interface Transport {
   get<T>(path: string, opts?: RequestOpts): Promise<T>;
+  /** GET returning raw bytes, for endpoints that stream `application/octet-stream`. */
+  getRaw(path: string, opts?: RequestOpts): Promise<ArrayBuffer>;
   post<T>(path: string, body?: unknown, opts?: RequestOpts): Promise<T>;
   put<T>(path: string, body?: unknown, opts?: RequestOpts): Promise<T>;
   patch<T>(path: string, body?: unknown, opts?: RequestOpts): Promise<T>;
@@ -178,6 +180,15 @@ export const createTransport = (options: TransportOptions): Transport => {
             searchParams: opts?.searchParams,
           })
           .json<T>(),
+      ),
+
+    getRaw: (path: string, opts?: RequestOpts): Promise<ArrayBuffer> =>
+      withErrorMapping(
+        api
+          .get(stripLeadingSlash(path), {
+            searchParams: opts?.searchParams,
+          })
+          .arrayBuffer(),
       ),
 
     post: <T>(path: string, body?: unknown, opts?: RequestOpts): Promise<T> =>

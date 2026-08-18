@@ -4,8 +4,17 @@ import { buildSearchParams } from "src/transport/build-search-params";
 import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
-import { InternalUserResponseSchema, InternalUsersResponseSchema } from "./schema";
-import type { InternalUser, InternalUsersResponse } from "./schema";
+import {
+  InternalUserNotificationSettingsSchema,
+  InternalUserResponseSchema,
+  InternalUsersResponseSchema,
+} from "./schema";
+import type {
+  InternalUser,
+  InternalUserNotificationSettings,
+  InternalUserUpdateRequest,
+  InternalUsersResponse,
+} from "./schema";
 
 export class InternalUsersResource {
   readonly #transport: Transport;
@@ -39,6 +48,26 @@ export class InternalUsersResource {
     const raw: unknown = await this.#transport.get(`v1/internal-users/${id}`);
     return parseResponse({
       schema: InternalUserResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
+  /** Update an internal user's client-access scope. */
+  async update(args: { id: string; body: InternalUserUpdateRequest }): Promise<InternalUser> {
+    const raw: unknown = await this.#transport.patch(`v1/internal-users/${args.id}`, args.body);
+    return parseResponse({
+      schema: InternalUserResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
+  /** Retrieve an internal user's notification preferences. */
+  async retrieveNotificationSettings(id: string): Promise<InternalUserNotificationSettings> {
+    const raw: unknown = await this.#transport.get(`v1/internal-users/${id}/notification-settings`);
+    return parseResponse({
+      schema: InternalUserNotificationSettingsSchema,
       data: raw,
       validate: this.#validate,
     });

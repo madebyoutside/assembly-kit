@@ -48,3 +48,34 @@ export const AssemblyFilesResponseSchema: z.ZodType<AssemblyFilesResponse> = z.o
   data: z.array(AssemblyFileSchema).nullable(),
   nextToken: z.string().optional(),
 });
+
+// ─── Permissions ──────────────────────────────────────────────────────────────
+
+export type ClientPermissions = "read_only" | "read_write";
+
+/**
+ * The OpenAPI spec declares this enum as the single string "read_only read_write";
+ * the two documented values are modelled separately here.
+ */
+export const ClientPermissionsSchema: z.ZodType<ClientPermissions> = z.enum([
+  "read_only",
+  "read_write",
+]);
+
+export interface FilePermissionsResponse {
+  success?: boolean;
+}
+
+export const FilePermissionsResponseSchema: z.ZodType<FilePermissionsResponse> = z.object({
+  success: z.boolean().optional(),
+});
+
+// ─── Download ─────────────────────────────────────────────────────────────────
+
+export interface FileDownloadUrlResponse {
+  downloadUrl: string;
+}
+
+export const FileDownloadUrlResponseSchema: z.ZodType<FileDownloadUrlResponse> = z.object({
+  downloadUrl: z.string(),
+});

@@ -42,6 +42,16 @@ export class NotificationsResource {
     });
   }
 
+  /** Retrieve a single notification by ID. */
+  async retrieve(id: string): Promise<Notification> {
+    const raw = await this.#transport.get<unknown>(`v1/notifications/${id}`);
+    return parseResponse({
+      schema: NotificationResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
   /** Delete a notification by ID. */
   async delete(id: string): Promise<void> {
     await this.#transport.delete(`v1/notifications/${id}`);

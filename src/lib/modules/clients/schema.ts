@@ -23,7 +23,7 @@ export interface Client<TCustomFields extends Record<string, unknown> = Record<s
   updatedAt?: string;
 }
 
-export const ClientSchema: z.ZodType<Client> = z.object({
+const clientShape = {
   avatarImageUrl: z.string().nullable(),
   companyId: z.string().optional(),
   companyIds: z.array(z.string()).optional(),
@@ -41,6 +41,23 @@ export const ClientSchema: z.ZodType<Client> = z.object({
   object: z.literal("client"),
   status: z.enum(["active", "invited", "notInvited"]),
   updatedAt: z.iso.datetime().optional(),
+};
+
+export const ClientSchema: z.ZodType<Client> = z.object(clientShape);
+
+/**
+ * `appVisibility` is documented in prose but absent from the OpenAPI response
+ * schema, so its group shape is kept loose rather than guessed at.
+ */
+export interface ClientWithAppVisibility<
+  TCustomFields extends Record<string, unknown> = Record<string, unknown>,
+> extends Client<TCustomFields> {
+  appVisibility?: Record<string, unknown>[];
+}
+
+export const ClientWithAppVisibilitySchema: z.ZodType<ClientWithAppVisibility> = z.object({
+  ...clientShape,
+  appVisibility: z.array(z.record(z.string(), z.unknown())).optional(),
 });
 
 // ─── Response ─────────────────────────────────────────────────────────────────

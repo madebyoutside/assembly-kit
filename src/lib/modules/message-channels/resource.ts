@@ -4,11 +4,16 @@ import { buildSearchParams } from "src/transport/build-search-params";
 import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
-import { MessageChannelResponseSchema, MessageChannelsResponseSchema } from "./schema";
+import {
+  MessageChannelResponseSchema,
+  MessageChannelsResponseSchema,
+  UnreadMessageChannelsResponseSchema,
+} from "./schema";
 import type {
   MessageChannel,
   MessageChannelCreateRequest,
   MessageChannelsResponse,
+  UnreadMessageChannelsResponse,
 } from "./schema";
 
 export class MessageChannelsResource {
@@ -43,6 +48,18 @@ export class MessageChannelsResource {
     });
     return parseResponse({
       schema: MessageChannelsResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
+  /** List the channels where a user has unread messages. Defaults to the authenticated user. */
+  async listUnread(args: { userId?: string } = {}): Promise<UnreadMessageChannelsResponse> {
+    const raw: unknown = await this.#transport.get("v1/message-channels/unread", {
+      searchParams: buildSearchParams(args),
+    });
+    return parseResponse({
+      schema: UnreadMessageChannelsResponseSchema,
       data: raw,
       validate: this.#validate,
     });

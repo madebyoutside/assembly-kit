@@ -4,10 +4,15 @@ import { buildSearchParams } from "src/transport/build-search-params";
 import type { Transport } from "src/transport/http";
 import { parseResponse } from "src/transport/parse-response";
 
-import { CompaniesResponseSchema, CompanyResponseSchema } from "./schema";
+import {
+  CompaniesResponseSchema,
+  CompanyAddClientsResponseSchema,
+  CompanyResponseSchema,
+} from "./schema";
 import type {
   CompaniesResponse,
   Company,
+  CompanyAddClientsResponse,
   CompanyCreateRequest,
   CompanyUpdateRequest,
 } from "./schema";
@@ -42,6 +47,28 @@ export class CompaniesResource<
       data: raw,
       validate: this.#validate,
     }) as Company<TCustomFields>;
+  }
+
+  /** Associate existing clients with a company. */
+  async addClients(args: {
+    id: string;
+    clientIds: string[];
+    confirmPromotePlaceholder?: boolean;
+  }): Promise<CompanyAddClientsResponse> {
+    const searchParams =
+      args.confirmPromotePlaceholder !== undefined
+        ? buildSearchParams({ confirmPromotePlaceholder: args.confirmPromotePlaceholder })
+        : undefined;
+    const raw: unknown = await this.#transport.post(
+      `v1/companies/${args.id}/clients`,
+      { clientIds: args.clientIds },
+      { searchParams },
+    );
+    return parseResponse({
+      schema: CompanyAddClientsResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
   }
 
   /** List companies with optional filters. */

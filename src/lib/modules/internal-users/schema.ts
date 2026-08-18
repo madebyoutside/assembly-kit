@@ -45,3 +45,54 @@ export const InternalUsersResponseSchema: z.ZodType<InternalUsersResponse> = z.o
   data: z.array(InternalUserSchema),
   nextToken: z.string().optional(),
 });
+
+// ─── Requests ─────────────────────────────────────────────────────────────────
+
+export interface InternalUserUpdateRequest {
+  companyAccessList?: string[];
+  isClientAccessLimited?: boolean;
+}
+
+export const InternalUserUpdateRequestSchema: z.ZodType<InternalUserUpdateRequest> = z.object({
+  companyAccessList: z.array(z.string()).optional(),
+  isClientAccessLimited: z.boolean().optional(),
+});
+
+// ─── Notification settings ────────────────────────────────────────────────────
+
+export type InternalUserEmailSetting = "always" | "no_emails" | "not_active";
+
+export const InternalUserEmailSettingSchema: z.ZodType<InternalUserEmailSetting> = z.enum([
+  "always",
+  "not_active",
+  "no_emails",
+]);
+
+export interface NotificationCategorySetting {
+  appId?: string;
+  disableEmail?: boolean;
+  disableInProduct?: boolean;
+  notificationSettingId?: string;
+}
+
+export const NotificationCategorySettingSchema: z.ZodType<NotificationCategorySetting> = z.object({
+  appId: z.string().optional(),
+  disableEmail: z.boolean().optional(),
+  disableInProduct: z.boolean().optional(),
+  notificationSettingId: z.string().optional(),
+});
+
+export interface InternalUserNotificationSettings {
+  disableInProduct?: boolean;
+  emailSettings?: InternalUserEmailSetting;
+  notifyAbout?: Record<string, NotificationCategorySetting>;
+  object?: string;
+}
+
+export const InternalUserNotificationSettingsSchema: z.ZodType<InternalUserNotificationSettings> =
+  z.object({
+    disableInProduct: z.boolean().optional(),
+    emailSettings: InternalUserEmailSettingSchema.optional(),
+    notifyAbout: z.record(z.string(), NotificationCategorySettingSchema).optional(),
+    object: z.string().optional(),
+  });
