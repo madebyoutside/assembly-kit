@@ -358,8 +358,9 @@ token.tokenId; // string | undefined — present in some marketplace tokens
 token.baseUrl; // string | undefined — overrides the API base URL if set
 
 // Identity checks
-token.isClientUser; // true if clientId + companyId are present
+token.isClientUser; // true if clientId is present
 token.isInternalUser; // true if internalUserId is present
+token.isProxying; // true if BOTH are present — internal user previewing as a client via CRM
 
 // Throwing guards — return narrowed payload type or throw AssemblyUnauthorizedError
 const clientPayload = token.ensureIsClient(); // ClientTokenPayload

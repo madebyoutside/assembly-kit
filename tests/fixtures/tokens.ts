@@ -103,3 +103,13 @@ if (paddedWsId === undefined) {
   throw new Error("workspaceId missing in padded payload");
 }
 export const BLOCK_ALIGNED_WORKSPACE_ID: string = paddedWsId;
+
+// ---------------------------------------------------------------------------
+// Proxy token: internal user acting as a client via CRM
+// ---------------------------------------------------------------------------
+export const PROXY_TOKEN: string = encryptPayload(TEST_API_KEY, {
+  clientId: TEST_CLIENT_ID,
+  companyId: TEST_COMPANY_ID,
+  internalUserId: TEST_INTERNAL_USER_ID,
+  workspaceId: TEST_WORKSPACE_ID,
+});
