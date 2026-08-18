@@ -1,9 +1,8 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -15,20 +14,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     steps:
-      - name: Checkout code
+      - name: Checkout main
         uses: actions/checkout@v6
         with:
+          ref: main
           fetch-depth: 0
 
-      - name: Verify tag matches package.json version
+      - name: Resolve version from release tag
         env:
-          TAG: ${{ github.ref_name }}
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          pkg=$(node -p "require('./package.json').version")
-          if [ "v$pkg" != "$TAG" ]; then
-            echo "::error::Tag $TAG does not match package.json version $pkg. Tag the version-bump commit (git push --follow-tags), and delete the bad tag."
+          if ! echo "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Release tag '$TAG' is not a vSEMVER tag (e.g. v0.0.6, v10.1.11)."
             exit 1
           fi
+          echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -54,19 +54,30 @@ jobs:
       - name: Run tests
         run: bun run test
 
+      - name: Bump to the released version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          printf '/** SDK version string sent with every API request. */\nexport const SDK_VERSION: string = "%s";\n' "$VERSION" > src/version.ts
+          if git diff --quiet; then
+            echo "Already at $VERSION"
+          else
+            git commit -am "chore: release v$VERSION"
+            git push origin HEAD:main
+          fi
+          git tag -f "$TAG"
+          git push -f origin "refs/tags/$TAG"
+
       - name: Build
         run: bun run build
-
-      - name: Generate changelog
-        run: bunx changelogithub
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # No NODE_AUTH_TOKEN: auth comes from OIDC trusted publishing.
       # Requires a trusted publisher configured on npmjs.com for this repo,
       # workflow (release.yml), and the "release" environment.
-      - name: Publish packages to npm
+      - name: Publish to npm
         run: npm pack && npm publish ./*.tgz --access public --provenance
         env:
           NPM_CONFIG_PROVENANCE: true
