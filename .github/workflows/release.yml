@@ -5,7 +5,7 @@ on:
     types: [published]
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
@@ -54,22 +54,12 @@ jobs:
       - name: Run tests
         run: bun run test
 
-      - name: Bump to the released version
-        env:
-          TAG: ${{ github.event.release.tag_name }}
+      # Runner-local only. main is protected by rulesets with no bypass actors,
+      # so nothing is committed back — the release tag is the version of record.
+      - name: Set version from release tag
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           npm version "$VERSION" --no-git-tag-version --allow-same-version
           printf '/** SDK version string sent with every API request. */\nexport const SDK_VERSION: string = "%s";\n' "$VERSION" > src/version.ts
-          if git diff --quiet; then
-            echo "Already at $VERSION"
-          else
-            git commit -am "chore: release v$VERSION"
-            git push origin HEAD:main
-          fi
-          git tag -f "$TAG"
-          git push -f origin "refs/tags/$TAG"
 
       - name: Build
         run: bun run build

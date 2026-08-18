@@ -13,12 +13,24 @@ pnpm run build         # Build all entry points to dist/ via vp pack
 pnpm run dev           # Build in watch mode
 pnpm test              # Run tests via vp test
 pnpm run check         # Lint + format + type check via vp check
-pnpm run release       # Bump version, commit, push, tag via bumpp
 ```
 
 Pre-commit hook runs `vp check --fix` on staged files.
 
 After any significant code change, always run `vp check --fix` to ensure lint, formatting, and type checking pass before committing.
+
+## Releasing
+
+Publish a GitHub Release with a `vSEMVER` tag (`v0.0.6`, `v10.1.11`). That triggers
+`.github/workflows/release.yml`, which takes the version from the tag, writes it into
+`package.json` and `src/version.ts` **in the runner only**, builds, and publishes to npm
+via OIDC trusted publishing.
+
+Nothing is committed back — main is protected by rulesets (PR required, signed commits,
+code scanning) with no bypass actors, so the release tag is the version of record. The
+`version` in `package.json` on main is a placeholder and will lag behind npm; keep it in
+step with `src/version.ts` (pinned by `tests/version.test.ts`) and bump both in a normal
+PR whenever you want them to reflect reality.
 
 ## Documentation Rules
 
