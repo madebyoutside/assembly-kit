@@ -4,12 +4,13 @@ import { z } from "zod";
 // Base types
 // ---------------------------------------------------------------------------
 
-export type InvoiceStatus = "draft" | "open" | "paid" | "void";
+export type InvoiceStatus = "draft" | "open" | "paid" | "processing" | "void";
 
 export const InvoiceStatusSchema: z.ZodType<InvoiceStatus> = z.enum([
   "draft",
   "open",
   "paid",
+  "processing",
   "void",
 ]);
 
