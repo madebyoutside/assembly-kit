@@ -38,6 +38,12 @@ specific version, put `Release-As: 1.2.3` in a commit footer.
 `src/version.ts` carries an `x-release-please-version` marker so it is bumped alongside
 `package.json`; `tests/version.test.ts` fails if the two ever drift.
 
+Immutable releases are enabled on this repository, so a tag name is burned permanently the
+moment a release publishes under it — deleting the release and the tag does not free the
+name, and release-please fails with `tag_name was used by an immutable release`. Never
+reuse a version number; skip to the next one. `v0.0.6`, `v0.05` and `v3.0.0` are already
+spent this way.
+
 ## Documentation Rules
 
 After any significant code change, update the following:
