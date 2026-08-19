@@ -13,12 +13,30 @@ pnpm run build         # Build all entry points to dist/ via vp pack
 pnpm run dev           # Build in watch mode
 pnpm test              # Run tests via vp test
 pnpm run check         # Lint + format + type check via vp check
-pnpm run release       # Bump version, commit, push, tag via bumpp
 ```
 
 Pre-commit hook runs `vp check --fix` on staged files.
 
 After any significant code change, always run `vp check --fix` to ensure lint, formatting, and type checking pass before committing.
+
+## Releasing
+
+Releases are driven by [release-please](https://github.com/googleapis/release-please) from
+conventional commit messages on `main` (`feat:` `fix:` `chore:` `ci:`, with `!` or a
+`BREAKING CHANGE:` footer for majors).
+
+1. Merge PRs to `main` as usual.
+2. release-please keeps an open `chore(main): release x.y.z` PR that bumps
+   `package.json`, `src/version.ts` and `CHANGELOG.md`.
+3. Merge that PR. release-please tags it and creates the GitHub Release, then the
+   `publish` job builds and publishes to npm via OIDC trusted publishing.
+
+Never bump the version or create a tag by hand — release-please owns both, and
+`.release-please-manifest.json` is the source of truth for the current version. To force a
+specific version, put `Release-As: 1.2.3` in a commit footer.
+
+`src/version.ts` carries an `x-release-please-version` marker so it is bumped alongside
+`package.json`; `tests/version.test.ts` fails if the two ever drift.
 
 ## Documentation Rules
 
