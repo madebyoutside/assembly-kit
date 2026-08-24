@@ -9,6 +9,7 @@ import {
   CustomFieldEntityTypeSchema,
   CustomFieldSchema,
   CustomFieldTypeSchema,
+  CustomFieldsCreateResponseSchema,
   InternalUserSchema,
   ListCustomFieldResponseSchema,
   NotificationCreateRequestSchema,
@@ -302,6 +303,57 @@ describe("CustomFieldSchema", () => {
       object: "notCustomField",
     });
     expect(result.success).toBe(false);
+  });
+
+  it("still requires object, since GET sends it", () => {
+    const { object, ...withoutObject } = valid;
+    expect(object).toBe("customField");
+    expect(CustomFieldSchema.safeParse(withoutObject).success).toBe(false);
+  });
+});
+
+// ─── CustomFieldsCreateResponseSchema ─────────────────────────────────────────
+
+describe("CustomFieldsCreateResponseSchema", () => {
+  /** Verbatim from POST /v1/custom-fields, which omits `object` on the field and its options. */
+  const createResponse = {
+    customFields: [
+      {
+        entityType: "company",
+        id: "388ac3ed-dbb3-45c4-823d-3f847a35f706",
+        key: "propertyType",
+        name: "Property Type",
+        options: [
+          {
+            color: "rgba(144, 149, 157, 1)",
+            id: "option-8dfa39d0-3a78-48ea-93c5-02bb33fb5811",
+            key: "hotel",
+            label: "Hotel",
+          },
+        ],
+        order: 3,
+        type: "multiSelect",
+      },
+    ],
+  };
+
+  it("accepts a create response with no object field", () => {
+    const result = CustomFieldsCreateResponseSchema.safeParse(createResponse);
+    expect(result.success).toBe(true);
+  });
+
+  it("still accepts a create response that does send object", () => {
+    const withObject = {
+      customFields: [{ ...createResponse.customFields[0], object: "customField" }],
+    };
+    expect(CustomFieldsCreateResponseSchema.safeParse(withObject).success).toBe(true);
+  });
+
+  it("rejects a wrong object literal", () => {
+    const wrong = {
+      customFields: [{ ...createResponse.customFields[0], object: "customFields" }],
+    };
+    expect(CustomFieldsCreateResponseSchema.safeParse(wrong).success).toBe(false);
   });
 });
 

@@ -289,6 +289,11 @@ import type {
 } from "assembly-kit/schemas";
 ```
 
+`customFields.create()` resolves to `CreatedCustomField[]`, not `CustomField[]`: `POST /v1/custom-fields`
+omits `object` from the fields it echoes back, where `GET` includes it. Narrow it yourself if you need
+the discriminant, or re-read the field through `customFields.list()`, which is authoritative for the
+derived `key` anyway.
+
 #### Response schemas
 
 ```typescript

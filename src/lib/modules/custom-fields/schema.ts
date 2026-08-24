@@ -42,7 +42,7 @@ export interface CustomField {
   type: CustomFieldType;
 }
 
-export const CustomFieldSchema: z.ZodType<CustomField> = z.object({
+const customFieldShape = {
   entityType: CustomFieldEntityTypeSchema,
   id: z.string(),
   key: z.string(),
@@ -51,6 +51,23 @@ export const CustomFieldSchema: z.ZodType<CustomField> = z.object({
   options: z.array(CustomFieldOptionSchema).optional(),
   order: z.number(),
   type: CustomFieldTypeSchema,
+};
+
+export const CustomFieldSchema: z.ZodType<CustomField> = z.object(customFieldShape);
+
+/**
+ * `POST /v1/custom-fields` omits `object` from the fields it echoes back, though `GET` includes it
+ * and the API reference documents it on both. Requiring it made a successful create throw
+ * `AssemblyResponseParseError` after the field had been created — and a custom field cannot be
+ * deleted through the API, so a retry left a duplicate behind. Drop this once the API sends it.
+ */
+export interface CreatedCustomField extends Omit<CustomField, "object"> {
+  object?: "customField";
+}
+
+export const CreatedCustomFieldSchema: z.ZodType<CreatedCustomField> = z.object({
+  ...customFieldShape,
+  object: z.literal("customField").optional(),
 });
 
 // ─── Custom field value types ─────────────────────────────────────────────────
@@ -125,9 +142,9 @@ export const CustomFieldsCreateRequestSchema: z.ZodType<CustomFieldsCreateReques
 });
 
 export interface CustomFieldsCreateResponse {
-  customFields: CustomField[];
+  customFields: CreatedCustomField[];
 }
 
 export const CustomFieldsCreateResponseSchema: z.ZodType<CustomFieldsCreateResponse> = z.object({
-  customFields: z.array(CustomFieldSchema).transform((v) => v || []),
+  customFields: z.array(CreatedCustomFieldSchema).transform((v) => v || []),
 });
