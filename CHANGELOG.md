@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.8](https://github.com/madebyoutside/assembly-kit/compare/v0.0.7...v0.0.8) (2026-08-24)
+
+
+### Bug Fixes
+
+* accept a custom-field create response with no object field ([#41](https://github.com/madebyoutside/assembly-kit/issues/41)) ([047f0d5](https://github.com/madebyoutside/assembly-kit/commit/047f0d5088c00d83451e9b8a13868e7a73543f14))
+
 ## [0.0.7](https://github.com/madebyoutside/assembly-kit/compare/v0.0.6...v0.0.7) (2026-08-19)
 
 
