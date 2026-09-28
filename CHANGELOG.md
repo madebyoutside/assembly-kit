@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.1.0](https://github.com/madebyoutside/assembly-kit/compare/v0.0.7...v0.1.0) (2026-09-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **tasks:** task `title` is now `name`, and `assigneeId`/`assigneeType` are replaced by `internalUserId`, `clientId` and `companyId`.
+
+### Features
+
+* **tasks:** support custom assignment email on task create ([#43](https://github.com/madebyoutside/assembly-kit/issues/43)) ([79079d8](https://github.com/madebyoutside/assembly-kit/commit/79079d88e0199acca8d2820975259bdceb70c23e))
+
+
+### Bug Fixes
+
+* accept a custom-field create response with no object field ([#41](https://github.com/madebyoutside/assembly-kit/issues/41)) ([047f0d5](https://github.com/madebyoutside/assembly-kit/commit/047f0d5088c00d83451e9b8a13868e7a73543f14))
+
 ## [0.0.7](https://github.com/madebyoutside/assembly-kit/compare/v0.0.6...v0.0.7) (2026-08-19)
 
 
