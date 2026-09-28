@@ -36,7 +36,7 @@ const kit = createAssemblyKit({
 // Access resources via namespaces
 const workspace = await kit.workspace.retrieve();
 const companies = await kit.companies.list();
-const task = await kit.tasks.create({ title: "Follow up", ... });
+const task = await kit.tasks.create({ name: "Follow up", ... });
 ```
 
 When only `workspaceId` is provided (no token), the SDK automatically sets `ASSEMBLY_ENV=local` at runtime and builds the compound key as `workspaceId/apiKey`.
@@ -178,6 +178,24 @@ const kit = createAssemblyKit({
 `files.download()` returns an `ArrayBuffer` — the endpoint streams `application/octet-stream`
 rather than JSON. Use `files.retrieveDownloadUrl()` instead when you want a presigned URL to
 hand to a browser.
+
+`tasks.create()` accepts an optional `email` to replace the default assignment email the
+assignee receives. `htmlBody` supports only `p`, `br`, `strong`/`b`, `em`/`i`, `ul`, `ol`,
+`li` and https links.
+
+```typescript
+await kit.tasks.create({
+  name: "Review your evaluation",
+  companyId: "co-123",
+  status: "todo",
+  email: {
+    subject: "Your evaluation is ready",
+    header: "Evaluation complete",
+    title: "Review Evaluation",
+    htmlBody: "<p>Your results are attached to the task.</p>",
+  },
+});
+```
 
 ### Pagination
 
