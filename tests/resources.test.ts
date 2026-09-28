@@ -148,6 +148,19 @@ describe("newly added endpoints", () => {
     expect(lastPath()).toBe("/v1/notifications/nt-1");
   });
 
+  it("tasks.create forwards the email override", async () => {
+    const body = {
+      companyId: "co-1",
+      email: { header: "Review", htmlBody: "<p>Hi</p>", subject: "Action Required", title: "Open" },
+      name: "Action Required",
+      status: "todo" as const,
+    };
+    await kit.tasks.create(body);
+    expect(lastCall().method).toBe("POST");
+    expect(lastPath()).toBe("/v1/tasks");
+    expect(lastCall().body).toEqual(body);
+  });
+
   it("taskComments.list, retrieve, delete", async () => {
     await kit.taskComments.list({ taskId: "tk-1" });
     expect(lastPath()).toBe("/v1/comments");

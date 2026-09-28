@@ -91,6 +91,23 @@ if (page.nextToken) {
 }
 ```
 
+## Task Assignment Email
+
+`tasks.create()` takes an optional `email` (`subject`, `header`, `title`, plus `body` or `htmlBody`, optional `ctaParams`) that replaces the default assignment email:
+
+```ts
+await kit.tasks.create({
+  name: "Review your evaluation",
+  companyId: "co-123",
+  email: {
+    subject: "Ready",
+    header: "Evaluation complete",
+    title: "Review",
+    htmlBody: "<p>Hi</p>",
+  },
+});
+```
+
 ## Typed Custom Fields
 
 `createAssemblyKit` accepts optional generic parameters that type the
