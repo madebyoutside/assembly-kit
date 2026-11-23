@@ -147,8 +147,8 @@ const kit = createAssemblyKit({
 | `me`                    | `retrieve()`                                                                                                                                                     |
 | `clients`               | `list()`, `retrieve()`, `retrieveWithAppVisibility()`, `create()`, `update()`, `delete()`, `listAll()`                                                           |
 | `companies`             | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `addClients()`, `listAll()`                                                                          |
-| `internalUsers`         | `list()`, `retrieve()`, `update()`, `retrieveNotificationSettings()`, `listAll()`                                                                                |
-| `customFields`          | `list()`, `create()`                                                                                                                                             |
+| `internalUsers`         | `list()`, `retrieve()`, `invite()`, `update()`, `retrieveNotificationSettings()`, `listAll()`                                                                    |
+| `customFields`          | `list()`, `create()`, `update()`, `delete()`                                                                                                                     |
 | `customFieldOptions`    | `list()`                                                                                                                                                         |
 | `notes`                 | `list()`, `retrieve()`, `create()`, `update()`, `delete()`, `listAll()`                                                                                          |
 | `messageChannels`       | `list()`, `retrieve()`, `create()`, `listUnread()`, `listAll()`                                                                                                  |
@@ -156,7 +156,7 @@ const kit = createAssemblyKit({
 | `products`              | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
 | `prices`                | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
 | `invoiceTemplates`      | `list()`, `listAll()`                                                                                                                                            |
-| `invoices`              | `list()`, `retrieve()`, `create()`, `listAll()`                                                                                                                  |
+| `invoices`              | `list()`, `retrieve()`, `create()`, `markPaid()`, `listAll()`                                                                                                    |
 | `subscriptionTemplates` | `list()`, `listAll()`                                                                                                                                            |
 | `subscriptions`         | `list()`, `retrieve()`, `create()`, `cancel()`, `listAll()`                                                                                                      |
 | `refunds`               | `list()`, `create()`, `listAll()`                                                                                                                                |

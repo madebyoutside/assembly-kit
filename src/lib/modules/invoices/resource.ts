@@ -47,6 +47,15 @@ export class InvoicesResource {
     return parseResponse({ schema: InvoiceResponseSchema, data: raw, validate: this.#validate });
   }
 
+  /**
+   * Mark an open or draft invoice paid for a payment collected outside Assembly. Irreversible;
+   * the client is notified.
+   */
+  async markPaid(id: string): Promise<Invoice> {
+    const raw = await this.#transport.post<unknown>(`v1/invoices/${id}/mark-paid`);
+    return parseResponse({ schema: InvoiceResponseSchema, data: raw, validate: this.#validate });
+  }
+
   /** Iterate over all invoices, automatically paginating. Default limit per page: 500. */
   async listAll(args: Omit<ListInvoicesArgs, "nextToken"> = {}): Promise<Invoice[]> {
     return paginate((listArgs) => this.list({ ...args, ...listArgs }), {

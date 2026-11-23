@@ -48,6 +48,20 @@ export const InternalUsersResponseSchema: z.ZodType<InternalUsersResponse> = z.o
 
 // ─── Requests ─────────────────────────────────────────────────────────────────
 
+export interface InternalUserInviteRequest {
+  email: string;
+  familyName?: string;
+  givenName?: string;
+  role?: "admin" | "staff";
+}
+
+export const InternalUserInviteRequestSchema: z.ZodType<InternalUserInviteRequest> = z.object({
+  email: z.email(),
+  familyName: z.string().optional(),
+  givenName: z.string().optional(),
+  role: z.enum(["admin", "staff"]).optional(),
+});
+
 export interface InternalUserUpdateRequest {
   companyAccessList?: string[];
   isClientAccessLimited?: boolean;
