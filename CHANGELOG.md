@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/madebyoutside/assembly-kit/compare/v0.1.0...v0.1.1) (2026-11-23)
+
+
+### Features
+
+* sync with latest API reference ([#45](https://github.com/madebyoutside/assembly-kit/issues/45)) ([af5b2ba](https://github.com/madebyoutside/assembly-kit/commit/af5b2bac2c5396ef2b0bd05d643dc890e6087bb0))
+
 ## [0.1.0](https://github.com/madebyoutside/assembly-kit/compare/v0.0.7...v0.1.0) (2026-09-28)
 
 
