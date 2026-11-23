@@ -11,6 +11,7 @@ import {
 } from "./schema";
 import type {
   InternalUser,
+  InternalUserInviteRequest,
   InternalUserNotificationSettings,
   InternalUserUpdateRequest,
   InternalUsersResponse,
@@ -46,6 +47,19 @@ export class InternalUsersResource {
   /** Retrieve a single internal user by ID. */
   async retrieve(id: string): Promise<InternalUser> {
     const raw: unknown = await this.#transport.get(`v1/internal-users/${id}`);
+    return parseResponse({
+      schema: InternalUserResponseSchema,
+      data: raw,
+      validate: this.#validate,
+    });
+  }
+
+  /**
+   * Create an internal user and email them an invite. Admin only; adds a billable seat on
+   * per-seat plans.
+   */
+  async invite(body: InternalUserInviteRequest): Promise<InternalUser> {
+    const raw: unknown = await this.#transport.post("v1/internal-users", body);
     return parseResponse({
       schema: InternalUserResponseSchema,
       data: raw,

@@ -7,21 +7,27 @@ import { CustomFieldOptionSchema } from "../custom-field-options";
 
 export type CustomFieldType =
   | "address"
+  | "checkbox"
+  | "date"
   | "email"
   | "multiSelect"
   | "number"
   | "phoneNumber"
+  | "select"
   | "text"
   | "url";
 
 export const CustomFieldTypeSchema: z.ZodType<CustomFieldType> = z.enum([
   "address",
+  "checkbox",
+  "date",
   "email",
   "phoneNumber",
   "text",
   "number",
   "url",
   "multiSelect",
+  "select",
 ]);
 
 export type CustomFieldEntityType = "client" | "company";
@@ -58,8 +64,8 @@ export const CustomFieldSchema: z.ZodType<CustomField> = z.object(customFieldSha
 /**
  * `POST /v1/custom-fields` omits `object` from the fields it echoes back, though `GET` includes it
  * and the API reference documents it on both. Requiring it made a successful create throw
- * `AssemblyResponseParseError` after the field had been created — and a custom field cannot be
- * deleted through the API, so a retry left a duplicate behind. Drop this once the API sends it.
+ * `AssemblyResponseParseError` after the field had been created, and a retry left a duplicate
+ * behind. Drop this once the API sends it.
  */
 export interface CreatedCustomField extends Omit<CustomField, "object"> {
   object?: "customField";
@@ -121,7 +127,7 @@ export const ListCustomFieldResponseSchema: z.ZodType<ListCustomFieldResponse> =
 export interface CustomFieldCreateInput {
   entityType: CustomFieldEntityType;
   name: string;
-  /** Only valid for `multiSelect` fields. */
+  /** Only valid for `multiSelect` and `select` fields. */
   options?: { label: string }[];
   type: CustomFieldType;
 }
@@ -139,6 +145,23 @@ export interface CustomFieldsCreateRequest {
 
 export const CustomFieldsCreateRequestSchema: z.ZodType<CustomFieldsCreateRequest> = z.object({
   customFields: z.array(CustomFieldCreateInputSchema),
+});
+
+export interface CustomFieldUpdateRequest {
+  /** Must match the field's current value; the API rejects a change. */
+  entityType?: CustomFieldEntityType;
+  name?: string;
+  /** Replaces the whole option set. Pass an existing option's `id` to relabel it; omit to add one. */
+  options?: { id?: string; label: string }[];
+  /** Must match the field's current value; the API rejects a change. */
+  type?: CustomFieldType;
+}
+
+export const CustomFieldUpdateRequestSchema: z.ZodType<CustomFieldUpdateRequest> = z.object({
+  entityType: CustomFieldEntityTypeSchema.optional(),
+  name: z.string().optional(),
+  options: z.array(z.object({ id: z.string().optional(), label: z.string() })).optional(),
+  type: CustomFieldTypeSchema.optional(),
 });
 
 export interface CustomFieldsCreateResponse {

@@ -51,12 +51,12 @@ Access API resources via `kit.<namespace>.<method>()`:
 | `me`                    | `retrieve()`                                                                                                                                             |
 | `clients`               | `list()` `retrieve()` `retrieveWithAppVisibility()` `create()` `update()` `delete()` `listAll()`                                                         |
 | `companies`             | `list()` `retrieve()` `create()` `update()` `delete()` `addClients()` `listAll()`                                                                        |
-| `internalUsers`         | `list()` `retrieve()` `update()` `retrieveNotificationSettings()` `listAll()`                                                                            |
+| `internalUsers`         | `list()` `retrieve()` `invite()` `update()` `retrieveNotificationSettings()` `listAll()`                                                                 |
 | `notes`                 | `list()` `retrieve()` `create()` `update()` `delete()` `listAll()`                                                                                       |
 | `tasks`                 | `list()` `retrieve()` `create()` `update()` `delete()` `listAll()`                                                                                       |
 | `taskComments`          | `list()` `retrieve()` `delete()` `listAll()`                                                                                                             |
 | `taskTemplates`         | `list()` `retrieve()` `listAll()`                                                                                                                        |
-| `invoices`              | `list()` `retrieve()` `create()` `listAll()`                                                                                                             |
+| `invoices`              | `list()` `retrieve()` `create()` `markPaid()` `listAll()`                                                                                                |
 | `invoiceTemplates`      | `list()` `listAll()`                                                                                                                                     |
 | `subscriptions`         | `list()` `retrieve()` `create()` `cancel()` `listAll()`                                                                                                  |
 | `subscriptionTemplates` | `list()` `listAll()`                                                                                                                                     |
@@ -64,7 +64,7 @@ Access API resources via `kit.<namespace>.<method>()`:
 | `payments`              | `list()` `listAll()`                                                                                                                                     |
 | `products`              | `list()` `retrieve()` `create()` `listAll()`                                                                                                             |
 | `prices`                | `list()` `retrieve()` `create()` `listAll()`                                                                                                             |
-| `contracts`             | `retrieve()` `send()`                                                                                                                                    |
+| `contracts`             | `list()` `retrieve()` `send()`                                                                                                                           |
 | `contractTemplates`     | `list()` `retrieve()`                                                                                                                                    |
 | `forms`                 | `list()` `retrieve()` `create()` `listSubmissions()` `listAllSubmissions()` `listAll()`                                                                  |
 | `formResponses`         | `list()` `create()`                                                                                                                                      |
@@ -74,7 +74,7 @@ Access API resources via `kit.<namespace>.<method>()`:
 | `messages`              | `list()` `send()` `listAll()`                                                                                                                            |
 | `events`                | `list()` `retrieve()` `create()` `listAll()`                                                                                                             |
 | `notifications`         | `list()` `retrieve()` `create()` `delete()` `markRead()` `markUnread()`                                                                                  |
-| `customFields`          | `list()` `create()`                                                                                                                                      |
+| `customFields`          | `list()` `create()` `update()` `delete()`                                                                                                                |
 | `customFieldOptions`    | `list()`                                                                                                                                                 |
 | `appConnections`        | `list()` `create()`                                                                                                                                      |
 | `appInstalls`           | `list()` `retrieve()` `retrieveNotificationSettings()` `createNotificationSettings()` `updateNotificationSettings()`                                     |

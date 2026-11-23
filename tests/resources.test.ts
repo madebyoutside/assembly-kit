@@ -101,6 +101,38 @@ describe("newly added endpoints", () => {
     expect(lastPath()).toBe("/v1/custom-fields");
   });
 
+  it("customFields.update", async () => {
+    await kit.customFields.update({
+      id: "cf-1",
+      body: { name: "Tier", options: [{ id: "opt-1", label: "Gold" }, { label: "Silver" }] },
+    });
+    expect(lastCall().method).toBe("PATCH");
+    expect(lastPath()).toBe("/v1/custom-fields/cf-1");
+    expect(lastCall().body).toEqual({
+      name: "Tier",
+      options: [{ id: "opt-1", label: "Gold" }, { label: "Silver" }],
+    });
+  });
+
+  it("customFields.delete", async () => {
+    await kit.customFields.delete("cf-1");
+    expect(lastCall().method).toBe("DELETE");
+    expect(lastPath()).toBe("/v1/custom-fields/cf-1");
+  });
+
+  it("internalUsers.invite", async () => {
+    await kit.internalUsers.invite({ email: "a@b.co", role: "staff" });
+    expect(lastCall().method).toBe("POST");
+    expect(lastPath()).toBe("/v1/internal-users");
+    expect(lastCall().body).toEqual({ email: "a@b.co", role: "staff" });
+  });
+
+  it("invoices.markPaid", async () => {
+    await kit.invoices.markPaid("in-1");
+    expect(lastCall().method).toBe("POST");
+    expect(lastPath()).toBe("/v1/invoices/in-1/mark-paid");
+  });
+
   it("forms.create", async () => {
     await kit.forms.create({ additionalFields: {}, fields: { name: "Intake" } });
     expect(lastCall().method).toBe("POST");
